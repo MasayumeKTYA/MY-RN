@@ -14,12 +14,14 @@ import TrackPlayer, {
   Event,
   PlaybackState,
   Track,
+  useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Img from './Image';
 import { useAppDispatch, useAppSelector } from '../store/index';
-import { setPlay } from '../store/module/songState';
+import { setPlay, setSongLists } from '../store/module/songState';
 import { getSongUrl } from '../api';
 import { MusicDataType } from '../type';
+import { listType } from '../type/detail';
 export const androidRipple = {
   borderless: true,
   foreground: Platform.OS === 'android' && Platform.Version >= 23,
@@ -33,8 +35,8 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
   console.log('Audio');
   const dispatch = useAppDispatch();
   const play = useAppSelector(state => state.songState.status);
-  const songList = useAppSelector(state => state.songState.songList);
-  const currentIndex = useAppSelector(state => state.songState.currentIndex);
+  const ls = useAppSelector(state => state.songState.songList);
+  const index = useAppSelector(state => state.songState.currentIndex);
   const [songDetail, setSongDetail] = useState<Track>();
   const playSong = () => {
     dispatch(setPlay(false));
@@ -52,10 +54,8 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
   });
 
   const getDetail = async () => {
-    // console.log(title);
-    const msg =
-      songList[currentIndex + 1].songname +
-      songList[currentIndex + 1].singer[0].name;
+    const lsIndex = index + 1;
+    const msg = ls[lsIndex].songname + ls[lsIndex].singer[0].name;
     TrackPlayer.reset();
     showToast();
     const params = {
@@ -73,8 +73,37 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
     };
     TrackPlayer.add(song);
     TrackPlayer.play();
+    TrackPlayer.seekTo(165);
     hideToast();
+    dispatch(setSongLists({ index: lsIndex }));
   };
+  useTrackPlayerEvents([Event.PlaybackState], async event => {
+    console.log(event, 'useTrackPlayerEvents');
+
+    switch (event.state) {
+      case 'buffering':
+      case 'loading':
+        dispatch(setPlay(true));
+        break;
+      case 'playing':
+        rotateIn();
+        const currentSong = await TrackPlayer.getActiveTrack();
+        setSongDetail(currentSong);
+        dispatch(setPlay(false));
+
+        break;
+      case 'paused':
+        dispatch(setPlay(true));
+        rotateOut();
+        break;
+      case 'error':
+        dispatch(setPlay(true));
+        break;
+      case 'ended':
+        getDetail();
+        break;
+    }
+  });
   //注册监听 //监听播放状态
   //动画效果
   let animatVal = 0;
@@ -98,45 +127,7 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
   useEffect(() => {
     TrackPlayer.setupPlayer();
   }, []);
-  useEffect(() => {
-    const handlePlaybackState = async (data: PlaybackState) => {
-      switch (data.state) {
-        case 'buffering':
-        case 'loading':
-          dispatch(setPlay(true));
-          break;
-        case 'playing':
-          rotateIn();
-          const currentSong = await TrackPlayer.getActiveTrack();
-          setSongDetail(currentSong);
-          dispatch(setPlay(false));
-          setTimeout(() => {
-            getDetail();
-          }, 1500);
-          break;
-        case 'paused':
-          dispatch(setPlay(true));
-          rotateOut();
-          break;
-        case 'error':
-          dispatch(setPlay(true));
-          break;
-        case 'ended':
-          getDetail();
-          break;
-      }
-    };
-    TrackPlayer.addEventListener(Event.PlaybackState, handlePlaybackState);
-    console.log('执行第ss');
 
-    return () => {
-      console.log('销毁');
-      // TrackPlayer.updateMetadataForTrack(
-      //   Event.PlaybackState,
-      //   handlePlaybackState,
-      // );
-    };
-  }, [songList, currentIndex]);
   return (
     <View style={className.box}>
       <View style={className.contain}>

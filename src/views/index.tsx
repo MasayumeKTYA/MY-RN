@@ -72,7 +72,7 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
         });
       });
 
-    // storage.remove({ key: 'storagePath' });
+    storage.remove({ key: 'storagePath' });
   }, []);
   return (
     <ScrollView>

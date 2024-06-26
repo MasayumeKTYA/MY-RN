@@ -5,16 +5,8 @@
  * @format
  */
 import 'react-native-gesture-handler';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback } from 'react';
 // import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-  useColorScheme,
-} from 'react-native';
 
 import store from './src/store/index';
 import { Provider } from 'react-redux';

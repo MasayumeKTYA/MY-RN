@@ -23,8 +23,7 @@ interface singerType {
   mid: string;
   name: string;
 }
-const sleep = (time: number) =>
-  new Promise(resolve => setTimeout(() => resolve(1), time));
+
 const Detail: React.FC<ToastProp> = prop => {
   const { route, Toast } = prop;
   const preId = useAppSelector(state => state.songState.songId);
@@ -50,35 +49,21 @@ const Detail: React.FC<ToastProp> = prop => {
     TrackPlayer.reset();
     TrackPlayer.pause();
     Toast.showToast();
-    // const params = {
-    //   msg,
-    //   n: '1',
-    //   type: 'json',
-    // };
-    // const res = await getSongUrl(params);
-    await sleep(1000);
-    const data = {
-      cover: 'https://img1.kuwo.cn/star/albumcover/300/32/88/1567952196.jpg',
-      songname: '周杰伦',
-      name: '夜曲',
-      url: 'http://lx.sycdn.kuwo.cn/c92c767e8aa57c6db12565bb9627d9fd/66797688/resource/n2/33/17/316735568.mp3',
+    const params = {
+      msg,
+      n: '1',
+      type: 'json',
     };
+    const res = await getSongUrl(params);
     const song: MusicDataType = {
-      // url: res.data.src,
+      url: res.data.src,
+      artist: res.data.name,
+      title: res.data.songname,
+      artwork: res.data.cover,
       album: '',
-      // artist: res.data.name,
-      // title: res.data.songname,
-      // artwork: res.data.cover,
-      url: data.url,
-      artist: data.name,
-      title: data.songname,
-      artwork: data.cover,
     };
-
     dispatch(setSongLists({ list: lists, index }));
     TrackPlayer.add(song);
-
-    // const index = queue.length;
 
     TrackPlayer.play();
     Toast.hideToast();

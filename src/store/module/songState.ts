@@ -17,7 +17,9 @@ export const counterSlice = createSlice({
       state.status = action.payload;
     },
     setSongLists: (state, action) => {
-      state.songList = action.payload.list;
+      if (action.payload.list !== undefined) {
+        state.songList = action.payload.list;
+      }
       state.currentIndex = action.payload.index;
     },
   },

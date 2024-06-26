@@ -8,7 +8,7 @@ const store = configureStore({
     winState: winStateReducer,
     songState: songStateReducer,
   },
-  // middleware: getDefaultMiddleware => getDefaultMiddleware().concat(thunk),
+  // applyMiddleware(thunk)
 });
 
 export type RootState = ReturnType<typeof store.getState>;
