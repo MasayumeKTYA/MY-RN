@@ -11,7 +11,7 @@ import { ParamListBase } from '@react-navigation/native';
 import { MemoType } from '../type/index';
 import Detail from '../views/detail';
 import Headers from './headerComponent/localFile';
-import Search from '../views/search';
+import Search from '../views/search/index';
 const Stack = createNativeStackNavigator();
 type RouterProps = {
   Toast: MemoType;
@@ -25,11 +25,17 @@ export default function Router(prop: RouterProps) {
         name="index"
         options={{
           headerShown: false,
+
+          statusBarStyle: 'dark',
         }}
       />
       <Stack.Screen
         name="detail"
-        options={{ title: '歌单详情', headerTitleAlign: 'center' }}>
+        options={{
+          title: '歌单详情',
+          headerTitleAlign: 'center',
+          statusBarStyle: 'dark',
+        }}>
         {(prop: NativeStackScreenProps<ParamListBase>) => (
           <Detail {...prop} Toast={Toast} />
         )}
@@ -37,7 +43,11 @@ export default function Router(prop: RouterProps) {
       <Stack.Screen
         name="setting"
         component={Setting}
-        options={{ title: '设置', headerTitleAlign: 'center' }}
+        options={{
+          title: '设置',
+          headerTitleAlign: 'center',
+          statusBarStyle: 'dark',
+        }}
       />
       <Stack.Screen
         name="localFile"
@@ -46,6 +56,7 @@ export default function Router(prop: RouterProps) {
           header: Headers,
           title: '本地',
           headerTitleAlign: 'center',
+          statusBarStyle: 'dark',
         }}
       />
       <Stack.Screen
@@ -53,6 +64,7 @@ export default function Router(prop: RouterProps) {
         options={{
           title: '选择本地歌曲',
           headerTitleAlign: 'center',
+          statusBarStyle: 'dark',
         }}>
         {(prop: NativeStackScreenProps<ParamListBase>) => (
           <SelectFile {...prop} Toast={Toast} />
@@ -64,6 +76,7 @@ export default function Router(prop: RouterProps) {
         options={{
           headerTitleAlign: 'center',
           headerShown: false,
+          statusBarStyle: 'dark',
         }}
       />
     </Stack.Navigator>

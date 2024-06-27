@@ -6,6 +6,7 @@ import {
   Pressable,
   FlatList,
   Dimensions,
+  StatusBar,
 } from 'react-native';
 import storage from '../storage/index';
 import { PlatformPressable } from '@react-navigation/elements';
@@ -29,6 +30,7 @@ export const LocalFile = () => {
   }, []);
   return (
     <Pressable style={s.contain} onPress={() => dispatch(hidenWin())}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <FlatList
         data={MusicData}
         renderItem={item => <AudioBox {...item} />}

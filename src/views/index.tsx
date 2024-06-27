@@ -11,6 +11,8 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import { useState } from 'react';
 import storage from '../storage/index';
@@ -76,43 +78,46 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
     storage.remove({ key: 'storagePath' });
   }, []);
   return (
-    <ScrollView>
-      <PlatformPressable
-        style={style.search}
-        onPress={() => {
-          console.log(21);
-          navigation.navigate('search');
-        }}>
-        <AntDesign size={26} name="search1" />
-      </PlatformPressable>
+    <SafeAreaView>
+      <ScrollView>
+        <AntDesign
+          size={26}
+          name="search1"
+          style={style.search}
+          onPress={() => {
+            console.log(21);
+            navigation.navigate('search');
+          }}
+        />
 
-      <Image
-        style={style.headerImg}
-        source={require('../assest/text.jpg')}
-        blurRadius={10}
-      />
-      <TouchableHighlight
-        style={[style.localFile, { left: 30 }]}
-        activeOpacity={1}
-        underlayColor="rgba(255, 255, 255, 0.45)"
-        onPress={() => {}}>
-        <Text style={style.localFileFont}>最近</Text>
-      </TouchableHighlight>
-      <TouchableHighlight
-        style={[style.localFile, { right: 30 }]}
-        activeOpacity={1}
-        underlayColor="rgba(255, 255, 255, 0.45)"
-        onPress={() => navigation.navigate('localFile')}>
-        <Text style={style.localFileFont}>本地音乐</Text>
-      </TouchableHighlight>
-      <View style={style.fillBox} />
-      <ScrollView style={style.scroll}>
-        {qqLists.map(item => (
-          <AudioBox key={item.title} data={item} navigation={navigation} />
-        ))}
-        <View style={{ height: 70 }} />
+        <Image
+          style={style.headerImg}
+          source={require('../assest/text.jpg')}
+          blurRadius={10}
+        />
+        <TouchableHighlight
+          style={[style.localFile, { left: 30 }]}
+          activeOpacity={1}
+          underlayColor="rgba(255, 255, 255, 0.45)"
+          onPress={() => {}}>
+          <Text style={style.localFileFont}>最近</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={[style.localFile, { right: 30 }]}
+          activeOpacity={1}
+          underlayColor="rgba(255, 255, 255, 0.45)"
+          onPress={() => navigation.navigate('localFile')}>
+          <Text style={style.localFileFont}>本地音乐</Text>
+        </TouchableHighlight>
+        <View style={style.fillBox} />
+        <ScrollView style={style.scroll}>
+          {qqLists.map(item => (
+            <AudioBox key={item.title} data={item} navigation={navigation} />
+          ))}
+          <View style={{ height: 70 }} />
+        </ScrollView>
       </ScrollView>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 const halfHeight = Dimensions.get('window').height / 2;
