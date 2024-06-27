@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Text,
   View,
+  TextInput,
   FlatList,
   Button,
   PermissionsAndroid,
@@ -25,7 +26,7 @@ import { getPersonLists } from '../api/index';
 
 import { PlatformPressable } from '@react-navigation/elements';
 import { setSongId } from '../store/module/songState';
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
 export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
   console.log('Index');
   const { navigation } = prop;
@@ -76,6 +77,15 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
   }, []);
   return (
     <ScrollView>
+      <PlatformPressable
+        style={style.search}
+        onPress={() => {
+          console.log(21);
+          navigation.navigate('search');
+        }}>
+        <AntDesign size={26} name="search1" />
+      </PlatformPressable>
+
       <Image
         style={style.headerImg}
         source={require('../assest/text.jpg')}
@@ -108,6 +118,14 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
 const halfHeight = Dimensions.get('window').height / 2;
 const halfWidth = Dimensions.get('window').width / 2;
 const style = StyleSheet.create({
+  search: {
+    position: 'absolute',
+    zIndex: 2,
+    top: 10,
+    right: 20,
+    height: 30,
+  },
+
   headerImg: {
     top: 0,
     left: 0,

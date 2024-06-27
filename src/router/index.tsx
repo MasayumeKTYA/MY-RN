@@ -11,7 +11,7 @@ import { ParamListBase } from '@react-navigation/native';
 import { MemoType } from '../type/index';
 import Detail from '../views/detail';
 import Headers from './headerComponent/localFile';
-import Search from './headerComponent/search/index';
+import Search from '../views/search';
 const Stack = createNativeStackNavigator();
 type RouterProps = {
   Toast: MemoType;
@@ -23,7 +23,9 @@ export default function Router(prop: RouterProps) {
       <Stack.Screen
         component={Index}
         name="index"
-        options={{ title: '首页', header: Search }}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="detail"
@@ -56,6 +58,14 @@ export default function Router(prop: RouterProps) {
           <SelectFile {...prop} Toast={Toast} />
         )}
       </Stack.Screen>
+      <Stack.Screen
+        name="search"
+        component={Search}
+        options={{
+          headerTitleAlign: 'center',
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 }
