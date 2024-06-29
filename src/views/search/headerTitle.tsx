@@ -3,9 +3,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 type InputProp = {
   value: string;
   onInput: (text: string) => void;
+  onKeyPress: () => void;
 };
 const Input: React.FC<InputProp> = prop => {
-  const { value, onInput } = prop;
+  const { value, onInput, onKeyPress } = prop;
   return (
     <View style={css.box}>
       <AntDesign size={16} name="search1" style={css.picture} />
@@ -14,6 +15,8 @@ const Input: React.FC<InputProp> = prop => {
         style={css.search}
         placeholder="请搜索..."
         onChangeText={text => onInput(text)}
+        autoFocus={true}
+        onSubmitEditing={onKeyPress}
       />
     </View>
   );
@@ -33,6 +36,7 @@ const css = StyleSheet.create({
     marginLeft: 10,
   },
   search: {
+    width: 150,
     marginLeft: 10,
   },
 });

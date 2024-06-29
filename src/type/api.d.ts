@@ -9,3 +9,8 @@ export interface QQListsType {
   subtitle: string;
   title: string;
 }
+export type searchListType = {
+  name: string;
+  id: string;
+  artist: string;
+};

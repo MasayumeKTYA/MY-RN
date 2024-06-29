@@ -72,13 +72,15 @@ export default function Router(prop: RouterProps) {
       </Stack.Screen>
       <Stack.Screen
         name="search"
-        component={Search}
         options={{
           headerTitleAlign: 'center',
           headerShown: false,
           statusBarStyle: 'dark',
-        }}
-      />
+        }}>
+        {(prop: NativeStackScreenProps<ParamListBase>) => (
+          <Search {...prop} Toast={Toast} />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }

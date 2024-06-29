@@ -17,12 +17,6 @@ import { MusicDataType, ToastProp } from '../type';
 import { useAppSelector, useAppDispatch } from '../store/index';
 import { setSongLists } from '../store/module/songState';
 import { listType } from '../type/detail';
-// msg=偶像
-interface singerType {
-  id: number;
-  mid: string;
-  name: string;
-}
 
 const Detail: React.FC<ToastProp> = prop => {
   const { route, Toast } = prop;
@@ -49,19 +43,16 @@ const Detail: React.FC<ToastProp> = prop => {
     TrackPlayer.reset();
     TrackPlayer.pause();
     Toast.showToast();
-    const params = {
-      msg,
-      n: '1',
-      type: 'json',
-    };
-    const res = await getSongUrl(params);
+    const res = await getSongUrl(msg);
     const song: MusicDataType = {
-      url: res.data.src,
-      artist: res.data.name,
-      title: res.data.songname,
-      artwork: res.data.cover,
+      url: res.src,
+      artist: res.name,
+      title: res.songname,
+      artwork: res.pic,
       album: '',
     };
+    console.log(song);
+
     dispatch(setSongLists({ list: lists, index }));
     TrackPlayer.add(song);
 
@@ -117,7 +108,7 @@ const ListsItem: React.FC<ItemProps> = props => {
   return (
     <PlatformPressable
       style={item.box}
-      onPress={() => getTitle(data.songname + data.singer[0].name)}>
+      onPress={() => getTitle(data.songname + '-' + data.singer[0].name)}>
       <Text style={item.index}>{index + 1}</Text>
       <View>
         <Text style={item.title} numberOfLines={1}>

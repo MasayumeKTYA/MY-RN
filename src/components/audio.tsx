@@ -58,22 +58,17 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
     const msg = ls[lsIndex].songname + ls[lsIndex].singer[0].name;
     TrackPlayer.reset();
     showToast();
-    const params = {
-      msg,
-      n: '1',
-      type: 'json',
-    };
-    const res = await getSongUrl(params);
+
+    const res = await getSongUrl(msg);
     const song: MusicDataType = {
-      url: res.data.src,
+      url: res.src,
+      artist: res.name,
+      title: res.songname,
+      artwork: res.pic,
       album: '',
-      artist: res.data.name,
-      title: res.data.songname,
-      artwork: res.data.cover,
     };
     TrackPlayer.add(song);
     TrackPlayer.play();
-    TrackPlayer.seekTo(165);
     hideToast();
     dispatch(setSongLists({ index: lsIndex }));
   };
