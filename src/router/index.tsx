@@ -25,8 +25,8 @@ export default function Router(prop: RouterProps) {
         name="index"
         options={{
           headerShown: false,
-
           statusBarStyle: 'dark',
+          statusBarColor: '#fff',
         }}
       />
       <Stack.Screen
@@ -35,6 +35,7 @@ export default function Router(prop: RouterProps) {
           title: '歌单详情',
           headerTitleAlign: 'center',
           statusBarStyle: 'dark',
+          statusBarColor: '#fff',
         }}>
         {(prop: NativeStackScreenProps<ParamListBase>) => (
           <Detail {...prop} Toast={Toast} />
@@ -47,6 +48,7 @@ export default function Router(prop: RouterProps) {
           title: '设置',
           headerTitleAlign: 'center',
           statusBarStyle: 'dark',
+          statusBarColor: '#fff',
         }}
       />
       <Stack.Screen
@@ -57,6 +59,7 @@ export default function Router(prop: RouterProps) {
           title: '本地',
           headerTitleAlign: 'center',
           statusBarStyle: 'dark',
+          statusBarColor: '#fff',
         }}
       />
       <Stack.Screen
@@ -65,6 +68,7 @@ export default function Router(prop: RouterProps) {
           title: '选择本地歌曲',
           headerTitleAlign: 'center',
           statusBarStyle: 'dark',
+          statusBarColor: '#fff',
         }}>
         {(prop: NativeStackScreenProps<ParamListBase>) => (
           <SelectFile {...prop} Toast={Toast} />
@@ -76,6 +80,7 @@ export default function Router(prop: RouterProps) {
           headerTitleAlign: 'center',
           headerShown: false,
           statusBarStyle: 'dark',
+          statusBarColor: '#fff',
         }}>
         {(prop: NativeStackScreenProps<ParamListBase>) => (
           <Search {...prop} Toast={Toast} />

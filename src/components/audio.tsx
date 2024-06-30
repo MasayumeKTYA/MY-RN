@@ -37,6 +37,7 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
   const play = useAppSelector(state => state.songState.status);
   const ls = useAppSelector(state => state.songState.songList);
   const index = useAppSelector(state => state.songState.currentIndex);
+  const isLoaclPlay = useAppSelector(state => state.songState.isLoaclPlay);
   const [songDetail, setSongDetail] = useState<Track>();
   const playSong = () => {
     dispatch(setPlay(false));
@@ -46,12 +47,6 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
     dispatch(setPlay(true));
     TrackPlayer.pause();
   };
-  const imgRef = useRef(new Animated.Value(0)).current;
-
-  const rotate = imgRef.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
 
   const getDetail = async () => {
     const lsIndex = index + 1;
@@ -81,8 +76,8 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
         dispatch(setPlay(true));
         break;
       case 'playing':
-        rotateIn();
         const currentSong = await TrackPlayer.getActiveTrack();
+        rotateIn();
         setSongDetail(currentSong);
         dispatch(setPlay(false));
 
@@ -101,14 +96,21 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
   });
   //注册监听 //监听播放状态
   //动画效果
+  const imgRef = useRef(new Animated.Value(0)).current;
+
+  const rotate = imgRef.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
   let animatVal = 0;
   const rotateIn = () => {
-    imgRef.setValue(animatVal);
+    imgRef.setValue(animatVal % 1);
 
     Animated.loop(
       Animated.timing(imgRef, {
         toValue: 1,
-        duration: 5000,
+        duration: 3000,
         easing: Easing.linear,
         useNativeDriver: true,
       }),
@@ -127,7 +129,11 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
     <View style={className.box}>
       <View style={className.contain}>
         <Animated.View style={[{ transform: [{ rotate: rotate }] }]}>
-          <Img style={[className.pic]} uri={songDetail?.artwork ?? null} />
+          <Img
+            style={[className.pic]}
+            uri={songDetail?.artwork ?? null}
+            net={isLoaclPlay}
+          />
         </Animated.View>
         <Text style={className.songName} numberOfLines={1}>
           {songDetail?.title ?? '未知歌曲'}-{songDetail?.artist ?? '未知歌曲'}

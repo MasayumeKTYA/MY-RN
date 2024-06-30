@@ -16,10 +16,13 @@ import { PlatformPressable } from '@react-navigation/elements';
 import { searchListType } from '../../type/api';
 import { MusicDataType, ToastProp } from '../../type';
 import TrackPlayer from 'react-native-track-player';
+import { setNetPlay } from '../../store/module/songState';
+import { useAppDispatch } from '../../store';
 function Search(prop: ToastProp) {
   const { navigation, Toast } = prop;
   const [searchVal, setSearchVal] = useState('');
   const [lists, setLists] = useState<searchListType[]>([]);
+
   const TextChange = (val: string) => {
     setSearchVal(val);
   };
@@ -31,9 +34,10 @@ function Search(prop: ToastProp) {
     Toast.hideToast();
   };
   //播放 获取url
+  const dispatch = useAppDispatch();
   const getUrl = async (id: string) => {
-    TrackPlayer.reset();
-    TrackPlayer.pause();
+    await TrackPlayer.reset();
+    await TrackPlayer.pause();
     Toast.showToast();
     const res = await getSongUrlSearch(id);
     const song: MusicDataType = {
@@ -43,6 +47,7 @@ function Search(prop: ToastProp) {
       artwork: res.pic,
       album: '',
     };
+    dispatch(setNetPlay(true));
     TrackPlayer.add(song);
 
     TrackPlayer.play();

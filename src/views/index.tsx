@@ -2,16 +2,12 @@ import React from 'react';
 import {
   Text,
   View,
-  TextInput,
-  FlatList,
-  Button,
   PermissionsAndroid,
   TouchableHighlight,
   ScrollView,
   StyleSheet,
   Image,
   Dimensions,
-  StatusBar,
   SafeAreaView,
 } from 'react-native';
 import { useState } from 'react';
@@ -74,8 +70,9 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
           data: [],
         });
       });
+    PermissionsAndroid.request('android.permission.READ_MEDIA_AUDIO');
 
-    storage.remove({ key: 'storagePath' });
+    // storage.remove({ key: 'storagePath' });
   }, []);
   return (
     <SafeAreaView>

@@ -1,5 +1,3 @@
-import { ParamListBase } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   View,
   Text,
@@ -15,7 +13,7 @@ import { getSongUrl } from '../api/index';
 import TrackPlayer from 'react-native-track-player';
 import { MusicDataType, ToastProp } from '../type';
 import { useAppSelector, useAppDispatch } from '../store/index';
-import { setSongLists } from '../store/module/songState';
+import { setSongLists, setNetPlay } from '../store/module/songState';
 import { listType } from '../type/detail';
 
 const Detail: React.FC<ToastProp> = prop => {
@@ -34,11 +32,12 @@ const Detail: React.FC<ToastProp> = prop => {
       utf8: '1',
     };
     const res = await getsongDetail(params);
+    console.log(res.cdlist[0].songlist);
 
-    setLists(res.cdlist[0].songlist);
+    // setLists(res.cdlist[0].songlist);
     setLoading(false);
   };
-
+  //播放
   const clickItem = async (msg: string, index: number) => {
     TrackPlayer.reset();
     TrackPlayer.pause();
@@ -54,6 +53,7 @@ const Detail: React.FC<ToastProp> = prop => {
     console.log(song);
 
     dispatch(setSongLists({ list: lists, index }));
+    dispatch(setNetPlay(true));
     TrackPlayer.add(song);
 
     TrackPlayer.play();

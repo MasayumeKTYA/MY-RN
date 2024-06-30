@@ -3,14 +3,19 @@ import { useEffect, useState } from 'react';
 interface ImgProps {
   uri: string | null;
   style: StyleProp<ImageStyle>;
+  net: boolean;
 }
-const Img: React.FC<ImgProps> = ({ uri, style }) => {
+const Img: React.FC<ImgProps> = ({ uri, style, net }) => {
   let [myComponents, setMyComponents] = useState<React.ReactNode | null>(null);
   useEffect(() => {
     if (uri !== null) {
+      let url = uri;
+      if (!net) {
+        url = 'file://' + url;
+      }
       setMyComponents(
         // 'file://' +
-        <Image source={{ uri: uri }} style={style} />,
+        <Image source={{ uri: url }} style={style} />,
       );
     } else {
       setMyComponents(

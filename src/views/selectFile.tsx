@@ -69,6 +69,8 @@ export const SelectFile = (prop: ToastProp) => {
   const confirmPath = async () => {
     Toast.showToast();
     try {
+      console.log(currentPath);
+
       let pathLists = await readDir(currentPath);
       const res: MusicDataType[] = await storage.load({ key: 'storagePath' });
       const musicRegex = /\.(mp3|ogg)$/i;
@@ -89,10 +91,14 @@ export const SelectFile = (prop: ToastProp) => {
           soundRespone.artwork = picPath;
         }
         res.push(soundRespone);
+
         if (index === pathLists.length - 1) {
           setStorage(res);
         }
       });
+      if (pathLists.length === 0) {
+        Toast.hideToast();
+      }
     } catch (err) {
       Alert.alert('报错');
     }
@@ -110,7 +116,7 @@ export const SelectFile = (prop: ToastProp) => {
       <View style={style.header}>
         <PlatformPressable onPress={back} android_ripple={androidRipple}>
           <View style={{ width: 40, alignItems: 'center' }}>
-            <FontAwesome6 name="angle-left" size={40} color={'#000'} />
+            <FontAwesome6 name="angle-left" size={30} color={'#000'} />
           </View>
         </PlatformPressable>
         <Text style={style.headerFont}>{currentPath}</Text>
@@ -122,8 +128,8 @@ export const SelectFile = (prop: ToastProp) => {
         ListEmptyComponent={() => {
           return (
             <View style={style.empty}>
-              <Text style={style.emptyFont}>暂无文件~</Text>
               <Fontisto name="file-2" color={'#000'} size={60} />
+              <Text style={style.emptyFont}>暂无文件~</Text>
             </View>
           );
         }}
@@ -143,6 +149,7 @@ export const SelectFile = (prop: ToastProp) => {
           );
         }}
       />
+      <View style={{ height: 70 }} />
       <TouchableHighlight
         underlayColor="#3a8ee6"
         style={style.btn_heghtBox}
@@ -168,7 +175,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   headerFont: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#000',
   },
   box: {
@@ -185,7 +192,7 @@ const style = StyleSheet.create({
   },
   font: {
     color: '#000',
-    fontSize: 20,
+    fontSize: 17,
   },
   empty: {
     alignItems: 'center',
@@ -193,8 +200,8 @@ const style = StyleSheet.create({
     marginTop: 150,
   },
   emptyFont: {
-    marginBottom: 20,
-    fontSize: 20,
+    marginBottom: 10,
+    fontSize: 17,
     color: '#000',
   },
 

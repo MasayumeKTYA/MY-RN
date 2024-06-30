@@ -15,6 +15,8 @@ import { useAppDispatch } from '../store/index';
 import { MusicDataType } from '../type/index';
 import Img from '../components/Image';
 import TrackPlayer from 'react-native-track-player';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import { setSongLists, setNetPlay } from '../store/module/songState';
 export const LocalFile = () => {
   // const winState = useAppSelector(state => state.winState.value);
   const dispatch = useAppDispatch();
@@ -28,14 +30,29 @@ export const LocalFile = () => {
         setMusicData(res);
       });
   }, []);
+  const songPlay = async (index: number) => {
+    await TrackPlayer.reset();
+    await TrackPlayer.pause();
+
+    dispatch(setSongLists({ list: MusicData, index }));
+    dispatch(setNetPlay(false));
+    TrackPlayer.add(MusicData[index]);
+    TrackPlayer.play();
+  };
   return (
     <Pressable style={s.contain} onPress={() => dispatch(hidenWin())}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-      <FlatList
-        data={MusicData}
-        renderItem={item => <AudioBox {...item} />}
-        keyExtractor={(item, index) => String(index)}
-      />
+
+      {MusicData.length === 0 ? (
+        <Empty />
+      ) : (
+        <FlatList
+          data={MusicData}
+          renderItem={item => <AudioBox {...item} onPress={songPlay} />}
+          keyExtractor={(item, index) => String(index)}
+        />
+      )}
+      <View style={{ height: 70 }} />
     </Pressable>
   );
 };
@@ -49,16 +66,13 @@ const s = StyleSheet.create({
 interface AudioBoxProps {
   item: MusicDataType;
   index: number;
+  onPress: (index: number) => void;
 }
-const AudioBox: React.FC<AudioBoxProps> = ({ item, index }) => {
-  const MedioPlay = () => {
-    TrackPlayer.skip(index);
-    TrackPlayer.play();
-  };
+const AudioBox: React.FC<AudioBoxProps> = ({ item, index, onPress }) => {
   return (
-    <PlatformPressable onPress={MedioPlay}>
+    <PlatformPressable onPress={() => onPress(index)}>
       <View style={audio.box}>
-        <Img style={audio.container} uri={item.artwork} />
+        <Img style={audio.container} uri={item.artwork} net={false} />
         <View style={audio.fontBox}>
           <Text style={audio.font1} numberOfLines={1}>
             {item.title ?? '未知歌曲'}
@@ -93,5 +107,26 @@ const audio = StyleSheet.create({
   },
   font2: {
     fontSize: 12,
+  },
+});
+
+const Empty = () => {
+  return (
+    <View style={emp.empty}>
+      <Fontisto name="file-2" color={'#000'} size={60} />
+      <Text style={emp.emptyFont}>暂无文件~</Text>
+    </View>
+  );
+};
+const emp = StyleSheet.create({
+  empty: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 100,
+  },
+  emptyFont: {
+    marginTop: 10,
+    fontSize: 17,
+    color: '#000',
   },
 });

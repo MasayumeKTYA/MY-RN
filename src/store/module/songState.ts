@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { listType } from '../../type/detail';
+import { MusicDataType } from '../../type/index';
 
 export const counterSlice = createSlice({
   name: 'songState',
   initialState: {
     songId: 0,
     status: true,
-    songList: [] as listType[],
+    songList: [] as MusicDataType[],
     currentIndex: -1,
+    isLoaclPlay: false,
   },
   reducers: {
     setSongId: (state, action) => {
@@ -22,10 +23,14 @@ export const counterSlice = createSlice({
       }
       state.currentIndex = action.payload.index;
     },
+    setNetPlay: (state, action) => {
+      state.isLoaclPlay = action.payload;
+    },
   },
 });
 
 // 为每个 case reducer 函数生成 Action creators
-export const { setSongId, setPlay, setSongLists } = counterSlice.actions;
+export const { setSongId, setPlay, setSongLists, setNetPlay } =
+  counterSlice.actions;
 
 export default counterSlice.reducer;
