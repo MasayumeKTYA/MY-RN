@@ -17,6 +17,7 @@ import Img from '../components/Image';
 import TrackPlayer from 'react-native-track-player';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { setSongLists, setNetPlay } from '../store/module/songState';
+import Empty from '../components/empty';
 export const LocalFile = () => {
   // const winState = useAppSelector(state => state.winState.value);
   const dispatch = useAppDispatch();
@@ -44,7 +45,9 @@ export const LocalFile = () => {
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
 
       {MusicData.length === 0 ? (
-        <Empty />
+        <View style={{ marginTop: 100 }}>
+          <Empty />
+        </View>
       ) : (
         <FlatList
           data={MusicData}
@@ -107,26 +110,5 @@ const audio = StyleSheet.create({
   },
   font2: {
     fontSize: 12,
-  },
-});
-
-const Empty = () => {
-  return (
-    <View style={emp.empty}>
-      <Fontisto name="file-2" color={'#000'} size={60} />
-      <Text style={emp.emptyFont}>暂无文件~</Text>
-    </View>
-  );
-};
-const emp = StyleSheet.create({
-  empty: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 100,
-  },
-  emptyFont: {
-    marginTop: 10,
-    fontSize: 17,
-    color: '#000',
   },
 });

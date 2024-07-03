@@ -1,12 +1,8 @@
 export interface QQListsType {
-  dir_show: number;
-  dirid: number;
-  dissid: number;
-  icontype: number;
-  iconurl: string;
-  isshow: number;
-  picurl: string;
-  subtitle: string;
+  id: number;
+  isLocal: boolean;
+  picurl: string | null;
+  num: number;
   title: string;
 }
 export type searchListType = {

@@ -15,6 +15,7 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { Toast } from './src/components/Toast';
 import Audio from './src/components/audio';
 import { MemoType } from './src/type';
+
 const MyTheme = {
   ...DefaultTheme,
   colors: {
@@ -42,10 +43,12 @@ function App(): React.JSX.Element {
   return (
     <Provider store={store}>
       {/* <View style={{ flex: 1 }}> */}
+
+      {/* </View> */}
+
       <ProvideComponetn showToast={showToast} hideToast={hideToast} />
       <Toast visible={toastVisible} />
       <Audio showToast={showToast} hideToast={hideToast} />
-      {/* </View> */}
     </Provider>
   );
 }

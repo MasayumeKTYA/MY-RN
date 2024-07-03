@@ -2,7 +2,7 @@ import {
   NativeStackScreenProps,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
-import { Index } from '../views/index';
+import { Index } from '../views/index/index';
 import { Setting } from '../views/setting';
 import { LocalFile } from '../views/local';
 import { SelectFile } from '../views/selectFile';
