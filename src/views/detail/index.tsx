@@ -6,35 +6,26 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
-import { getsongDetail } from '../api/index';
+import { getSongUrl } from '../../api/index';
 import { useEffect, useState } from 'react';
 import { PlatformPressable } from '@react-navigation/elements';
-import { getSongUrl } from '../api/index';
 import TrackPlayer from 'react-native-track-player';
-import { MusicDataType, ToastProp } from '../type';
-import { useAppSelector, useAppDispatch } from '../store/index';
-import { setSongLists, setNetPlay } from '../store/module/songState';
-import { listType } from '../type/detail';
+import { MusicDataType, ToastProp, listType } from '../../type';
+import { useAppDispatch } from '../../store/index';
+import { setSongLists, setNetPlay } from '../../store/module/songState';
+import storage from '../../storage';
 
 const Detail: React.FC<ToastProp> = prop => {
   const { route, Toast } = prop;
-  const preId = useAppSelector(state => state.songState.songId);
   const dispatch = useAppDispatch();
-  const rotPar = route.params as { id: number };
+  const songID = route.params as { id: number };
 
-  const [lists, setLists] = useState<listType[]>([]);
+  const [lists, setLists] = useState<MusicDataType[]>([]);
   const [loading, setLoading] = useState(true);
   const detailInit = async () => {
-    const params = {
-      disstid: rotPar.id,
-      type: '1',
-      format: 'json',
-      utf8: '1',
-    };
-    const res = await getsongDetail(params);
-    console.log(res.cdlist[0].songlist);
-
-    // setLists(res.cdlist[0].songlist);
+    const res = await storage.load({ key: String(songID.id) });
+    console.log(res);
+    setLists(res);
     setLoading(false);
   };
   //播放
@@ -94,27 +85,24 @@ const css = StyleSheet.create({
   },
 });
 interface ItemProps {
-  data: listType;
+  data: MusicDataType;
   index: number;
   onClick: (str: string, index: number) => void;
 }
 //主内容
 const ListsItem: React.FC<ItemProps> = props => {
   const { data, index, onClick } = props;
-
   const getTitle = async (msg: string) => {
     onClick(msg, index);
   };
   return (
-    <PlatformPressable
-      style={item.box}
-      onPress={() => getTitle(data.songname + '-' + data.singer[0].name)}>
+    <PlatformPressable style={item.box} onPress={() => getTitle(data.artist)}>
       <Text style={item.index}>{index + 1}</Text>
       <View>
         <Text style={item.title} numberOfLines={1}>
-          {data.songname}
+          {data.title}
         </Text>
-        <Text style={item.subtitle}>{data.singer[0].name}</Text>
+        <Text style={item.subtitle}>{data.artist}</Text>
       </View>
     </PlatformPressable>
   );

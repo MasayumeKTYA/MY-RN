@@ -12,7 +12,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { PlatformPressable } from '@react-navigation/elements';
 import TrackPlayer, {
   Event,
-  PlaybackState,
   Track,
   useTrackPlayerEvents,
 } from 'react-native-track-player';

@@ -42,10 +42,6 @@ function App(): React.JSX.Element {
   }, []);
   return (
     <Provider store={store}>
-      {/* <View style={{ flex: 1 }}> */}
-
-      {/* </View> */}
-
       <ProvideComponetn showToast={showToast} hideToast={hideToast} />
       <Toast visible={toastVisible} />
       <Audio showToast={showToast} hideToast={hideToast} />

@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Modal,
+  TextInput,
 } from 'react-native';
 
 import { Header, HeaderBackButton } from '@react-navigation/elements';
@@ -30,12 +31,14 @@ function Search(prop: ToastProp) {
   const TextChange = (val: string) => {
     setSearchVal(val);
   };
+  let inputRef: React.RefObject<TextInput> | null = null;
   //搜索
   const clickSearch = async () => {
     Toast.showToast();
     const res = await searchSong(searchVal);
     setLists(res);
     Toast.hideToast();
+    inputRef?.current?.blur();
   };
   //播放 获取url
   const dispatch = useAppDispatch();
@@ -60,39 +63,41 @@ function Search(prop: ToastProp) {
   //编辑弹出
   const [toastShow, setToastShow] = useState(false);
   const [songLists, setSongLists] = useState<QQListsType[]>([]);
-  let currentClickSong: MusicDataType | null = null;
+  let [currentSong, setCurrentSong] = useState<MusicDataType | null>(null);
   const showEdit = async (id: string) => {
     setToastShow(true);
     const res = await getSongUrlSearch(id);
-    currentClickSong = {
+    setCurrentSong({
       url: res.src,
       artist: res.name,
       title: res.songname,
       artwork: res.pic,
       album: '',
-    };
+    });
   };
   const requestClose = () => {
     setToastShow(false);
   };
   //选择当前歌单
   const saveSong = async (id: number) => {
-    console.log(2111);
-    console.log(currentClickSong);
+    console.log(currentSong);
 
-    if (currentClickSong === null) return;
+    if (currentSong === null) return;
     const songs: MusicDataType[] = await storage.load({ key: String(id) });
     const lists: QQListsType[] = await storage.load({ key: 'lists' });
     const index = lists.findIndex(item => item.id === id);
     lists[index].num += 1;
-    songs.push(currentClickSong);
+    songs.push(currentSong);
     setToastShow(false);
-    currentClickSong = null;
+    currentSong = null;
     console.log(lists[index]);
     console.log([...songs]);
 
     await storage.save({ key: String(id), data: [...songs] });
     await storage.save({ key: 'lists', data: [...lists] });
+  };
+  const getBlur = (Ref: React.RefObject<TextInput>) => {
+    inputRef = Ref;
   };
   useEffect(() => {
     storage
@@ -115,6 +120,7 @@ function Search(prop: ToastProp) {
             value={searchVal}
             onInput={TextChange}
             onKeyPress={clickSearch}
+            onBlur={getBlur}
           />
         )}
         headerRight={() => <HeaderRight onSearch={clickSearch} />}

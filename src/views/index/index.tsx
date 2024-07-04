@@ -22,41 +22,16 @@ import {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import { ParamListBase } from '@react-navigation/native';
-import { getPersonLists } from '../../api/index';
 import { PlatformPressable } from '@react-navigation/elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Img from '../../components/Image';
+
 export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
   console.log('Index');
   const { navigation } = prop;
   const [qqLists, setQQLists] = useState<QQListsType[]>([]);
-  //获取qq音乐列表
-  const getListsHttp = async () => {
-    const data = {
-      _: '1718372284986',
-      cv: '4747474',
-      ct: '24',
-      format: 'json',
-      inCharset: 'utf-8',
-      outCharset: 'utf-8',
-      notice: '0',
-      platform: 'yqq.json',
-      needNewCode: '0',
-      uin: '1419965049',
-      g_tk_new_20200303: '1573671023',
-      g_tk: '1573671023',
-      cid: '205360838',
-      userid: '1419965049',
-      reqfrom: '1',
-      reqtype: '0',
-      hostUin: '0',
-      loginUin: '1419965049',
-    };
-    const res = await getPersonLists(data);
-    if (Object.keys(res.data).length === 0) return;
-    setQQLists(res.data.mydiss.list);
-  };
+
   //创建歌单
   const [modalShow, setModalShow] = useState(false);
   const [songListsName, setSongListsName] = useState('');
@@ -97,7 +72,6 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
     });
   };
   useEffect(() => {
-    getListsHttp();
     storage
       .load({
         key: 'lists',
@@ -171,7 +145,7 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
             style={[style.localFile]}
             activeOpacity={1}
             underlayColor="rgba(255, 255, 255, 0.45)"
-            onPress={() => {}}>
+            onPress={() => navigation.navigate('setting')}>
             <Text style={style.localFileFont}>最近</Text>
           </TouchableHighlight>
           <TouchableHighlight

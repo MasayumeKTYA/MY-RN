@@ -27,22 +27,8 @@ export async function searchSong(data: string) {
   });
   return searchLists;
 }
-//获取个人歌单
-export function getPersonLists<T>(data: T) {
-  return axios.get(
-    'https://c6.y.qq.com/rsc/fcgi-bin/fcg_get_profile_homepage.fcg',
-    data,
-    true,
-  );
-}
-//获取歌单详情
-export function getsongDetail<T>(data: T) {
-  return axios.get(
-    'https://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg',
-    data,
-    true,
-  );
-}
+
+
 //qq音乐个人歌单获取播放url
 export async function getSongUrl(data: string) {
   console.log(data);
