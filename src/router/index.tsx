@@ -12,6 +12,7 @@ import { MemoType } from '../type/index';
 import Detail from '../views/detail';
 import Headers from './headerComponent/localFile';
 import Search from '../views/search/index';
+import ImportSong from '../views/importSong';
 const Stack = createNativeStackNavigator();
 type RouterProps = {
   Toast: MemoType;
@@ -86,6 +87,17 @@ export default function Router(prop: RouterProps) {
           <Search {...prop} Toast={Toast} />
         )}
       </Stack.Screen>
+      <Stack.Screen
+        name="importSong"
+        options={{
+          title: '导入外部歌单',
+          headerTitleAlign: 'center',
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarColor: '#fff',
+        }}
+        component={ImportSong}
+      />
     </Stack.Navigator>
   );
 }

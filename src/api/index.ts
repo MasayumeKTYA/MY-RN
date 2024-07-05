@@ -83,3 +83,8 @@ export async function getSongUrlSearch(songId: string) {
   };
   return songData;
 }
+export const UrlFetch = async (url: string) => {
+  const response = await fetch(url)
+
+  return response.text()
+}

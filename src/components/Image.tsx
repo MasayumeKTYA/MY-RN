@@ -3,20 +3,17 @@ import { useEffect, useState } from 'react';
 interface ImgProps {
   uri: string | null;
   style: StyleProp<ImageStyle>;
-  net: boolean;
 }
-const Img: React.FC<ImgProps> = ({ uri, style, net }) => {
+const Img: React.FC<ImgProps> = ({ uri, style }) => {
   let [myComponents, setMyComponents] = useState<React.ReactNode | null>(null);
   useEffect(() => {
     if (uri !== null) {
       let url = uri;
-      if (!net) {
+      const Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+      if (!Expression.test(uri)) {
         url = 'file://' + url;
       }
-      setMyComponents(
-        // 'file://' +
-        <Image source={{ uri: url }} style={style} />,
-      );
+      setMyComponents(<Image source={{ uri: url }} style={style} />);
     } else {
       setMyComponents(
         <Image source={require('../assest/text.jpg')} style={style} />,

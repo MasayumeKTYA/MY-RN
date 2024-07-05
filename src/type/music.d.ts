@@ -23,6 +23,7 @@ export interface MemoType {
   showToast: () => void;
   hideToast: () => void;
 }
+export type RouterProps = NativeStackScreenProps<ParamListBase>
 export interface ToastProp extends NativeStackScreenProps<ParamListBase> {
   Toast: MemoType;
 }

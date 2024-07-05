@@ -10,7 +10,7 @@ import { getSongUrl } from '../../api/index';
 import { useEffect, useState } from 'react';
 import { PlatformPressable } from '@react-navigation/elements';
 import TrackPlayer from 'react-native-track-player';
-import { MusicDataType, ToastProp, listType } from '../../type';
+import { MusicDataType, ToastProp } from '../../type';
 import { useAppDispatch } from '../../store/index';
 import { setSongLists, setNetPlay } from '../../store/module/songState';
 import storage from '../../storage';
@@ -19,12 +19,10 @@ const Detail: React.FC<ToastProp> = prop => {
   const { route, Toast } = prop;
   const dispatch = useAppDispatch();
   const songID = route.params as { id: number };
-
   const [lists, setLists] = useState<MusicDataType[]>([]);
   const [loading, setLoading] = useState(true);
   const detailInit = async () => {
     const res = await storage.load({ key: String(songID.id) });
-    console.log(res);
     setLists(res);
     setLoading(false);
   };
@@ -41,7 +39,6 @@ const Detail: React.FC<ToastProp> = prop => {
       artwork: res.pic,
       album: '',
     };
-    console.log(song);
 
     dispatch(setSongLists({ list: lists, index }));
     dispatch(setNetPlay(true));
@@ -49,6 +46,7 @@ const Detail: React.FC<ToastProp> = prop => {
 
     TrackPlayer.play();
     Toast.hideToast();
+    await storage.save({ key: 'current', data: song });
   };
   useEffect(() => {
     detailInit();
@@ -65,7 +63,7 @@ const Detail: React.FC<ToastProp> = prop => {
           renderItem={({ item, index }) => (
             <ListsItem data={item} index={index} onClick={clickItem} />
           )}
-          keyExtractor={item => item.songmid}
+          keyExtractor={item => item.artwork}
         />
       )}
 
@@ -96,7 +94,9 @@ const ListsItem: React.FC<ItemProps> = props => {
     onClick(msg, index);
   };
   return (
-    <PlatformPressable style={item.box} onPress={() => getTitle(data.artist)}>
+    <PlatformPressable
+      style={item.box}
+      onPress={() => getTitle(data.artist + data.title)}>
       <Text style={item.index}>{index + 1}</Text>
       <View>
         <Text style={item.title} numberOfLines={1}>

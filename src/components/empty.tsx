@@ -3,8 +3,6 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 
 type EmptyProps = { size?: number };
 const Empty: React.FC<EmptyProps> = ({ size = 60 }) => {
-  console.log(size);
-
   return (
     <View style={emp.empty}>
       <Fontisto name="file-2" color={'#000'} size={size} />

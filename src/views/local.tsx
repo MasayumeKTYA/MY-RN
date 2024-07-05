@@ -12,25 +12,29 @@ import storage from '../storage/index';
 import { PlatformPressable } from '@react-navigation/elements';
 import { hidenWin } from '../store/module/winState';
 import { useAppDispatch } from '../store/index';
-import { MusicDataType } from '../type/index';
+import { MusicDataType, RouterProps } from '../type/index';
 import Img from '../components/Image';
 import TrackPlayer from 'react-native-track-player';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 import { setSongLists, setNetPlay } from '../store/module/songState';
 import Empty from '../components/empty';
-export const LocalFile = () => {
+export const LocalFile: React.FC<RouterProps> = ({ navigation }) => {
   // const winState = useAppSelector(state => state.winState.value);
   const dispatch = useAppDispatch();
   const [MusicData, setMusicData] = useState<MusicDataType[]>([]);
+
   useEffect(() => {
-    storage
-      .load({
-        key: 'storagePath',
-      })
-      .then((res: MusicDataType[]) => {
-        setMusicData(res);
-      });
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      storage
+        .load({
+          key: 'storagePath',
+        })
+        .then((res: MusicDataType[]) => {
+          setMusicData(res);
+        });
+    });
+
+    return unsubscribe;
+  }, [navigation]);
   const songPlay = async (index: number) => {
     await TrackPlayer.reset();
     await TrackPlayer.pause();
@@ -75,7 +79,7 @@ const AudioBox: React.FC<AudioBoxProps> = ({ item, index, onPress }) => {
   return (
     <PlatformPressable onPress={() => onPress(index)}>
       <View style={audio.box}>
-        <Img style={audio.container} uri={item.artwork} net={false} />
+        <Img style={audio.container} uri={item.artwork} />
         <View style={audio.fontBox}>
           <Text style={audio.font1} numberOfLines={1}>
             {item.title ?? '未知歌曲'}

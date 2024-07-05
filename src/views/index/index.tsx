@@ -26,6 +26,7 @@ import { PlatformPressable } from '@react-navigation/elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Img from '../../components/Image';
+import TrackPlayer from 'react-native-track-player';
 
 export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
   console.log('Index');
@@ -71,24 +72,31 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
       data: [],
     });
   };
+  const readPrePlay = async () => {
+    try {
+      const res = await storage.load({ key: 'current' });
+      TrackPlayer.add(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    storage
-      .load({
-        key: 'lists',
-      })
-      .then((res: QQListsType[]) => {
-        setQQLists(res);
-      });
-    storage
-      .load({
-        key: '0',
-      })
-      .then(res => {
-        console.log(res);
-      });
     // storage.remove({ key: 'lists' });
     PermissionsAndroid.request('android.permission.READ_MEDIA_AUDIO');
+    readPrePlay();
   }, []);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      storage
+        .load({
+          key: 'lists',
+        })
+        .then((res: QQListsType[]) => {
+          setQQLists(res);
+        });
+    });
+    return unsubscribe;
+  }, [navigation]);
   return (
     <SafeAreaView>
       <Modal
@@ -167,7 +175,7 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
         <ScrollView style={style.scroll}>
           <PlatformPressable
             style={[audio.box, { marginTop: 20 }]}
-            onPress={() => {}}>
+            onPress={() => navigation.navigate('importSong')}>
             <View style={audio.picBG}>
               <Ionicons name="add" size={50} />
             </View>
@@ -287,7 +295,7 @@ const AudioBox = (props: AudioBoxProps) => {
   };
   return (
     <PlatformPressable style={audio.box} onPress={() => toDetail(data.id)}>
-      <Img style={audio.container} uri={data.picurl} net={true} />
+      <Img style={audio.container} uri={data.picurl} />
       <View>
         <Text style={audio.font1}>{data.title}</Text>
         <Text style={audio.font2}>{data.num}首</Text>

@@ -20,7 +20,6 @@ import { useAppDispatch, useAppSelector } from '../store/index';
 import { setPlay, setSongLists } from '../store/module/songState';
 import { getSongUrl } from '../api';
 import { MusicDataType } from '../type';
-import { listType } from '../type/detail';
 export const androidRipple = {
   borderless: true,
   foreground: Platform.OS === 'android' && Platform.Version >= 23,
@@ -49,7 +48,7 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
 
   const getDetail = async () => {
     const lsIndex = index + 1;
-    const msg = ls[lsIndex].songname + ls[lsIndex].singer[0].name;
+    const msg = ls[lsIndex].artist + ls[lsIndex].title;
     TrackPlayer.reset();
     showToast();
 
@@ -66,6 +65,15 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
     hideToast();
     dispatch(setSongLists({ index: lsIndex }));
   };
+  const setCurrent = async () => {
+    try {
+      const currentSong = await TrackPlayer.getActiveTrack();
+
+      setSongDetail(currentSong);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useTrackPlayerEvents([Event.PlaybackState], async event => {
     console.log(event, 'useTrackPlayerEvents');
 
@@ -75,9 +83,8 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
         dispatch(setPlay(true));
         break;
       case 'playing':
-        const currentSong = await TrackPlayer.getActiveTrack();
         rotateIn();
-        setSongDetail(currentSong);
+        setCurrent();
         dispatch(setPlay(false));
 
         break;
@@ -122,17 +129,14 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
   };
   useEffect(() => {
     TrackPlayer.setupPlayer();
+    setTimeout(setCurrent, 200);
   }, []);
 
   return (
     <View style={className.box}>
       <View style={className.contain}>
         <Animated.View style={[{ transform: [{ rotate: rotate }] }]}>
-          <Img
-            style={[className.pic]}
-            uri={songDetail?.artwork ?? null}
-            net={isLoaclPlay}
-          />
+          <Img style={[className.pic]} uri={songDetail?.artwork ?? null} />
         </Animated.View>
         <Text style={className.songName} numberOfLines={1}>
           {songDetail?.title ?? '未知歌曲'}-{songDetail?.artist ?? '未知歌曲'}

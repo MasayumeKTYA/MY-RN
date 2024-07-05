@@ -9,7 +9,7 @@ interface AudioBoxProps {
 const ModalAudio: React.FC<AudioBoxProps> = ({ data, onPress }) => {
   return (
     <PlatformPressable style={audio.box} onPress={() => onPress(data.id)}>
-      <Img style={audio.container} uri={data.picurl} net={true} />
+      <Img style={audio.container} uri={data.picurl} />
       <View>
         <Text style={audio.font1}>{data.title}</Text>
         <Text style={audio.font2}>{data.num}首</Text>
