@@ -3,8 +3,12 @@ import Fetch from '../tool/index';
 const axios = new Fetch();
 //搜索歌曲
 export async function searchSong(data: string) {
-  // return axios.get('https://c.y.qq.com/soso/fcgi-bin/client_search_cp', data);
-  const respone = await fetch(`http://www.2t58.com/so/${data}.html`);
+  const respone = await fetch(`http://www.2t58.com/so/${data}.html`, {
+    headers: {
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    },
+  });
   const html = await respone.text();
   const regex = /\/song\/([^"]+)\.html" target="_mp3">([^<]+)<\/a>/g;
   let match;
@@ -28,8 +32,7 @@ export async function searchSong(data: string) {
   return searchLists;
 }
 
-
-//qq音乐个人歌单获取播放url
+//歌单获取播放url
 export async function getSongUrl(data: string) {
   console.log(data);
 
@@ -83,8 +86,16 @@ export async function getSongUrlSearch(songId: string) {
   };
   return songData;
 }
-export const UrlFetch = async (url: string) => {
-  const response = await fetch(url)
+//导入歌单
+export const ImportHttp = async (id: string) => {
+  const url = `https://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&format=json&disstid=${id}`;
+  const response = await fetch(url, {
+    headers: {
+      Referer: 'https://y.qq.com/',
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    },
+  });
 
-  return response.text()
-}
+  return response.json();
+};
