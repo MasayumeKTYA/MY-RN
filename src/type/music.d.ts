@@ -20,8 +20,8 @@ export interface MusicType {
 }
 
 export interface MemoType {
-  showToast: () => void;
-  hideToast: () => void;
+  showToast: (text?: string) => void;
+  hideToast: () => void
 }
 export type RouterProps = NativeStackScreenProps<ParamListBase>
 export interface ToastProp extends NativeStackScreenProps<ParamListBase> {

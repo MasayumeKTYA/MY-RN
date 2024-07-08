@@ -8,16 +8,16 @@ import {
   Dimensions,
   StatusBar,
 } from 'react-native';
-import storage from '../storage/index';
+import storage from '../../storage/index';
 import { PlatformPressable } from '@react-navigation/elements';
-import { hidenWin } from '../store/module/winState';
-import { useAppDispatch } from '../store/index';
-import { MusicDataType, RouterProps } from '../type/index';
-import Img from '../components/Image';
+import { hidenWin } from '../../store/module/winState';
+import { useAppDispatch } from '../../store/index';
+import { MusicDataType, RouterProps } from '../../type/index';
+import Img from '../../components/Image';
 import TrackPlayer from 'react-native-track-player';
-import { setSongLists, setNetPlay } from '../store/module/songState';
-import Empty from '../components/empty';
-export const LocalFile: React.FC<RouterProps> = ({ navigation }) => {
+import { setSongLists, setNetPlay } from '../../store/module/songState';
+import Empty from '../../components/empty';
+const LocalFile: React.FC<RouterProps> = ({ navigation }) => {
   // const winState = useAppSelector(state => state.winState.value);
   const dispatch = useAppDispatch();
   const [MusicData, setMusicData] = useState<MusicDataType[]>([]);
@@ -116,3 +116,4 @@ const audio = StyleSheet.create({
     fontSize: 12,
   },
 });
+export default LocalFile;

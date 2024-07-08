@@ -20,13 +20,12 @@ import {
   writeFile,
   ExternalDirectoryPath,
 } from 'react-native-fs';
-import { androidRipple } from '../shareVar/index';
-import storage from '../storage/index';
-import { MusicDataType, MusicType } from '../type/index';
-import { ToastProp } from '../type/index';
+import { androidRipple } from '../../shareVar/index';
+import storage from '../../storage/index';
+import { MusicDataType, MusicType, ToastProp } from '../../type/index';
 
-export const SelectFile = (prop: ToastProp) => {
-  const { Toast } = prop;
+const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
+  const { showToast, hideToast } = Toast;
   const [fileArr, setFileArr] = useState<ReadDirItem[]>([]);
   const readDirList = async (fileName: string) => {
     try {
@@ -52,7 +51,8 @@ export const SelectFile = (prop: ToastProp) => {
   //上一级
   const back = () => {
     if (currentPath === '/storage/emulated/0') {
-      Alert.alert('已经是根目录啦');
+      showToast('已经是根目录啦');
+      setTimeout(hideToast, 1000);
       return;
     }
     const pathArray = currentPath.split('/');
@@ -67,7 +67,7 @@ export const SelectFile = (prop: ToastProp) => {
   //选择此路径
   const { Music }: MusicType = NativeModules as MusicType;
   const confirmPath = async () => {
-    Toast.showToast();
+    showToast();
     try {
       console.log(currentPath);
 
@@ -97,15 +97,18 @@ export const SelectFile = (prop: ToastProp) => {
         }
       });
       if (pathLists.length === 0) {
-        Toast.hideToast();
+        hideToast();
       }
     } catch (err) {
+      hideToast();
       Alert.alert('报错');
     }
   };
   function setStorage(res: MusicDataType[]) {
     storage.save({ key: 'storagePath', data: res });
-    Toast.hideToast();
+
+    showToast('导入成功');
+    setTimeout(hideToast, 1000);
   }
   useEffect(() => {
     readDirList(ExternalStorageDirectoryPath);
@@ -228,3 +231,4 @@ const style = StyleSheet.create({
     marginRight: 20,
   },
 });
+export default SelectFile;

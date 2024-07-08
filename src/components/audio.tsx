@@ -19,17 +19,14 @@ import Img from './Image';
 import { useAppDispatch, useAppSelector } from '../store/index';
 import { setPlay, setSongLists } from '../store/module/songState';
 import { getSongUrl } from '../api';
-import { MusicDataType } from '../type';
+import { MemoType, MusicDataType } from '../type';
 export const androidRipple = {
   borderless: true,
   foreground: Platform.OS === 'android' && Platform.Version >= 23,
   radius: 30,
 };
-type AudioProp = {
-  showToast: Function;
-  hideToast: Function;
-};
-const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
+
+const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
   console.log('Audio');
   const dispatch = useAppDispatch();
   const play = useAppSelector(state => state.songState.status);
@@ -62,8 +59,8 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
     };
     TrackPlayer.add(song);
     TrackPlayer.play();
-    hideToast();
     dispatch(setSongLists({ index: lsIndex }));
+    hideToast();
   };
   const setCurrent = async () => {
     try {
@@ -133,21 +130,23 @@ const Audio: React.FC<AudioProp> = ({ showToast, hideToast }) => {
   }, []);
 
   return (
-    <View style={className.box}>
-      <View style={className.contain}>
-        <Animated.View style={[{ transform: [{ rotate: rotate }] }]}>
-          <Img style={[className.pic]} uri={songDetail?.artwork ?? null} />
-        </Animated.View>
-        <Text style={className.songName} numberOfLines={1}>
-          {songDetail?.title ?? '未知歌曲'}-{songDetail?.artist ?? '未知歌曲'}
-        </Text>
-      </View>
-      <View style={className.contain}>
-        {play ? (
-          <AudioBtn name="playcircleo" onClick={playSong} />
-        ) : (
-          <AudioBtn name="pausecircleo" onClick={pauseSong} />
-        )}
+    <View style={{ position: 'relative' }}>
+      <View style={className.box}>
+        <View style={className.contain}>
+          <Animated.View style={[{ transform: [{ rotate: rotate }] }]}>
+            <Img style={[className.pic]} uri={songDetail?.artwork ?? null} />
+          </Animated.View>
+          <Text style={className.songName} numberOfLines={1}>
+            {songDetail?.title ?? '未知歌曲'}-{songDetail?.artist ?? '未知歌曲'}
+          </Text>
+        </View>
+        <View style={className.contain}>
+          {play ? (
+            <AudioBtn name="playcircleo" onClick={playSong} />
+          ) : (
+            <AudioBtn name="pausecircleo" onClick={pauseSong} />
+          )}
+        </View>
       </View>
     </View>
   );
@@ -168,7 +167,7 @@ const className = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     bottom: 0,
-    zIndex: 8,
+    zIndex: 2,
     height: 70,
     backgroundColor: '#fff',
     flexDirection: 'row',

@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import HeaderRight from './headerRight';
 import { getSongUrlSearch, searchSong } from '../../api/index';
 import { PlatformPressable } from '@react-navigation/elements';
-import { QQListsType, searchListType } from '../../type/api';
+import { ListsType, searchListType } from '../../type/api';
 import { MusicDataType, ToastProp } from '../../type';
 import TrackPlayer from 'react-native-track-player';
 import { setNetPlay } from '../../store/module/songState';
@@ -62,7 +62,7 @@ function Search(prop: ToastProp) {
   };
   //编辑弹出
   const [toastShow, setToastShow] = useState(false);
-  const [songLists, setSongLists] = useState<QQListsType[]>([]);
+  const [songLists, setSongLists] = useState<ListsType[]>([]);
   let [currentSong, setCurrentSong] = useState<MusicDataType | null>(null);
   const showEdit = async (id: string) => {
     setToastShow(true);
@@ -84,7 +84,7 @@ function Search(prop: ToastProp) {
 
     if (currentSong === null) return;
     const songs: MusicDataType[] = await storage.load({ key: String(id) });
-    const lists: QQListsType[] = await storage.load({ key: 'lists' });
+    const lists: ListsType[] = await storage.load({ key: 'lists' });
     const index = lists.findIndex(item => item.id === id);
     lists[index].num += 1;
     songs.push(currentSong);
@@ -104,7 +104,7 @@ function Search(prop: ToastProp) {
       .load({
         key: 'lists',
       })
-      .then((res: QQListsType[]) => {
+      .then((res: ListsType[]) => {
         setSongLists(res);
       });
   }, []);

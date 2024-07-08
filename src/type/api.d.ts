@@ -1,4 +1,4 @@
-export interface QQListsType {
+export interface ListsType {
   id: number;
   isLocal: boolean;
   picurl: string | null;

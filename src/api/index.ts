@@ -86,9 +86,9 @@ export async function getSongUrlSearch(songId: string) {
   };
   return songData;
 }
-//导入歌单
+//导入歌单 qq音乐
 export const ImportHttp = async (id: string) => {
-  const url = `https://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&format=json&disstid=${id}`;
+  const url = `https://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&format=json&disstid=${id}&outCharset=utf-8`;
   const response = await fetch(url, {
     headers: {
       Referer: 'https://y.qq.com/',

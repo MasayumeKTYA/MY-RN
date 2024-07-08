@@ -16,7 +16,7 @@ import {
 import { useState } from 'react';
 import storage from '../../storage/index';
 import { useEffect } from 'react';
-import { QQListsType } from '../../type/api';
+import { ListsType } from '../../type/api';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
@@ -28,10 +28,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Img from '../../components/Image';
 import TrackPlayer from 'react-native-track-player';
 
-export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
+const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
   console.log('Index');
   const { navigation } = prop;
-  const [qqLists, setQQLists] = useState<QQListsType[]>([]);
+  const [qqLists, setQQLists] = useState<ListsType[]>([]);
 
   //创建歌单
   const [modalShow, setModalShow] = useState(false);
@@ -49,7 +49,7 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
       return;
     }
     const filterList = qqLists.filter(item => item.isLocal);
-    const lists: QQListsType = {
+    const lists: ListsType = {
       isLocal: true,
       id: filterList.length,
       picurl: null,
@@ -82,6 +82,7 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
   };
   useEffect(() => {
     // storage.remove({ key: 'lists' });
+
     PermissionsAndroid.request('android.permission.READ_MEDIA_AUDIO');
     readPrePlay();
   }, []);
@@ -91,7 +92,7 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
         .load({
           key: 'lists',
         })
-        .then((res: QQListsType[]) => {
+        .then((res: ListsType[]) => {
           setQQLists(res);
         });
     });
@@ -138,16 +139,14 @@ export const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
           size={26}
           name="search1"
           style={style.search}
-          onPress={() => {
-            console.log(21);
-            navigation.navigate('search');
-          }}
+          onPress={() => navigation.navigate('search')}
         />
         <Image
           style={style.headerImg}
           source={require('../../assest/text.jpg')}
           blurRadius={20}
         />
+
         <View style={style.btnBox}>
           <TouchableHighlight
             style={[style.localFile]}
@@ -284,13 +283,15 @@ const style = StyleSheet.create({
   },
 });
 interface AudioBoxProps {
-  data: QQListsType;
+  data: ListsType;
   navigation: NativeStackNavigationProp<ParamListBase, string, undefined>;
 }
 const AudioBox = (props: AudioBoxProps) => {
   const { data, navigation } = props;
 
   const toDetail = (id: number) => {
+    // console.log(id);
+
     navigation.navigate('detail', { id });
   };
   return (
@@ -336,3 +337,4 @@ const audio = StyleSheet.create({
     fontSize: 12,
   },
 });
+export default Index;

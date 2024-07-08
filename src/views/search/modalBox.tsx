@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Img from '../../components/Image';
 import { PlatformPressable } from '@react-navigation/elements';
-import { QQListsType } from '../../type/api';
+import { ListsType } from '../../type/api';
 interface AudioBoxProps {
-  data: QQListsType;
+  data: ListsType;
   onPress: (id: number) => void;
 }
 const ModalAudio: React.FC<AudioBoxProps> = ({ data, onPress }) => {

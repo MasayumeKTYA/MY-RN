@@ -25,26 +25,38 @@ const MyTheme = {
   },
 };
 
-const ProvideComponetn = React.memo((Toast: MemoType) => (
+const MemoRouter = React.memo((Toast: MemoType) => (
   <NavigationContainer theme={MyTheme}>
     <Router Toast={Toast} />
   </NavigationContainer>
 ));
+const MemoAudio = React.memo<MemoType>(({ showToast, hideToast }) => (
+  <Audio showToast={showToast} hideToast={hideToast} />
+));
 function App(): React.JSX.Element {
   // const isDarkMode = useColorScheme() === 'dark';
   const [toastVisible, setToastVisible] = React.useState(false);
-
-  const showToast = useCallback(() => {
+  const [text, setText] = React.useState('');
+  const showToast = useCallback((text: string) => {
+    setText(text);
     setToastVisible(true);
+    console.log(text);
   }, []);
   const hideToast = useCallback(() => {
     setToastVisible(false);
+    setText('');
   }, []);
   return (
     <Provider store={store}>
-      <ProvideComponetn showToast={showToast} hideToast={hideToast} />
-      <Toast visible={toastVisible} />
-      <Audio showToast={showToast} hideToast={hideToast} />
+      <MemoRouter
+        showToast={(text = '') => showToast(text)}
+        hideToast={hideToast}
+      />
+      <Toast visible={toastVisible} title={text} />
+      <MemoAudio
+        showToast={(text = '') => showToast(text)}
+        hideToast={hideToast}
+      />
     </Provider>
   );
 }

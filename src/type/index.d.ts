@@ -1,12 +1,11 @@
-import { QQListsType, searchListType } from './api'
+import { ListsType, searchListType } from './api'
 
-import { MusicDataType, MusicType, MemoType, ToastProp } from './music'
+import { MusicDataType, MusicType, MemoType, ToastProp, RouterProps } from './music'
 
 
 
 
 export {
-
   MusicDataType, MusicType, MemoType, ToastProp, RouterProps,
-  QQListsType, searchListType
+  ListsType, searchListType
 }

@@ -22,9 +22,14 @@ const Detail: React.FC<ToastProp> = prop => {
   const [lists, setLists] = useState<MusicDataType[]>([]);
   const [loading, setLoading] = useState(true);
   const detailInit = async () => {
-    const res = await storage.load({ key: String(songID.id) });
-    setLists(res);
-    setLoading(false);
+    try {
+      const res = await storage.load({ key: String(songID.id) });
+
+      setLists(res);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
   //播放
   const clickItem = async (msg: string, index: number) => {
@@ -63,7 +68,7 @@ const Detail: React.FC<ToastProp> = prop => {
           renderItem={({ item, index }) => (
             <ListsItem data={item} index={index} onClick={clickItem} />
           )}
-          keyExtractor={item => item.artwork}
+          keyExtractor={(_, index) => String(index)}
         />
       )}
 
@@ -94,9 +99,7 @@ const ListsItem: React.FC<ItemProps> = props => {
     onClick(msg, index);
   };
   return (
-    <PlatformPressable
-      style={item.box}
-      onPress={() => getTitle(data.artist + data.title)}>
+    <PlatformPressable style={item.box} onPress={() => getTitle(data.title)}>
       <Text style={item.index}>{index + 1}</Text>
       <View>
         <Text style={item.title} numberOfLines={1}>

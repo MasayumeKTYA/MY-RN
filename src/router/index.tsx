@@ -2,17 +2,20 @@ import {
   NativeStackScreenProps,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
-import { Index } from '../views/index/index';
-import { Setting } from '../views/setting';
-import { LocalFile } from '../views/local';
-import { SelectFile } from '../views/selectFile';
-import React from 'react';
 import { ParamListBase } from '@react-navigation/native';
-import { MemoType } from '../type/index';
-import Detail from '../views/detail';
+import React from 'react';
 import Headers from './headerComponent/localFile';
-import Search from '../views/search/index';
-import ImportSong from '../views/importSong';
+import { MemoType } from '../type/index';
+
+import {
+  Index,
+  Setting,
+  LocalFile,
+  SelectFile,
+  Detail,
+  Search,
+  ImportSong,
+} from '../views/index.ts';
 const Stack = createNativeStackNavigator();
 type RouterProps = {
   Toast: MemoType;
@@ -44,14 +47,16 @@ export default function Router(prop: RouterProps) {
       </Stack.Screen>
       <Stack.Screen
         name="setting"
-        component={Setting}
         options={{
           title: '设置',
           headerTitleAlign: 'center',
           statusBarStyle: 'dark',
           statusBarColor: '#fff',
-        }}
-      />
+        }}>
+        {(prop: NativeStackScreenProps<ParamListBase>) => (
+          <Setting {...prop} Toast={Toast} />
+        )}
+      </Stack.Screen>
       <Stack.Screen
         name="localFile"
         component={LocalFile}
@@ -95,9 +100,11 @@ export default function Router(prop: RouterProps) {
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarColor: '#fff',
-        }}
-        component={ImportSong}
-      />
+        }}>
+        {(prop: NativeStackScreenProps<ParamListBase>) => (
+          <ImportSong {...prop} Toast={Toast} />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }
