@@ -4,16 +4,12 @@ import { MusicDataType } from '../../type/index';
 export const counterSlice = createSlice({
   name: 'songState',
   initialState: {
-    songId: 0,
     status: true,
     songList: [] as MusicDataType[],
     currentIndex: -1,
-    isLoaclPlay: false,
+    isShow: true
   },
   reducers: {
-    setSongId: (state, action) => {
-      state.songId = action.payload;
-    },
     setPlay: (state, action) => {
       state.status = action.payload;
     },
@@ -23,14 +19,14 @@ export const counterSlice = createSlice({
       }
       state.currentIndex = action.payload.index;
     },
-    setNetPlay: (state, action) => {
-      state.isLoaclPlay = action.payload;
-    },
+    changeShow: (state, action) => {
+      state.isShow = action.payload
+    }
   },
 });
 
 // 为每个 case reducer 函数生成 Action creators
-export const { setSongId, setPlay, setSongLists, setNetPlay } =
+export const { setPlay, setSongLists, changeShow } =
   counterSlice.actions;
 
 export default counterSlice.reducer;

@@ -6,31 +6,27 @@ import {
   TouchableHighlight,
   ScrollView,
   StyleSheet,
-  Image,
-  Dimensions,
-  SafeAreaView,
   Modal,
   KeyboardAvoidingView,
   TextInput,
+  FlatList,
 } from 'react-native';
 import { useState } from 'react';
 import storage from '../../storage/index';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect } from 'react';
-import { ListsType } from '../../type/api';
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ParamListBase } from '@react-navigation/native';
 import { PlatformPressable } from '@react-navigation/elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Img from '../../components/Image';
 import TrackPlayer from 'react-native-track-player';
+import MemoAudio from '../../components/audio';
+import { ToastProp, ListsType } from '../../type';
 
-const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
-  console.log('Index');
-  const { navigation } = prop;
+const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
+  const { showToast, hideToast } = Toast;
   const [qqLists, setQQLists] = useState<ListsType[]>([]);
 
   //创建歌单
@@ -72,19 +68,12 @@ const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
       data: [],
     });
   };
-  const readPrePlay = async () => {
-    try {
-      const res = await storage.load({ key: 'current' });
-      TrackPlayer.add(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    // storage.remove({ key: 'lists' });
 
+  useEffect(() => {
+    console.log('Index');
+
+    // storage.remove({ key: 'lists' });
     PermissionsAndroid.request('android.permission.READ_MEDIA_AUDIO');
-    readPrePlay();
   }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -99,12 +88,13 @@ const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
     return unsubscribe;
   }, [navigation]);
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <Modal
         visible={modalShow}
         onRequestClose={requestClose}
         animationType="fade"
-        transparent={true}>
+        transparent={true}
+        statusBarTranslucent={true}>
         <View style={modalStyle.modalBox}>
           <KeyboardAvoidingView style={modalStyle.modalContain}>
             <Text style={modalStyle.modalFont}>歌单名称</Text>
@@ -134,64 +124,59 @@ const Index = (prop: NativeStackScreenProps<ParamListBase>) => {
           </KeyboardAvoidingView>
         </View>
       </Modal>
-      <ScrollView>
+      <View style={style.searchBox}>
+        <View />
         <AntDesign
           size={26}
           name="search1"
           style={style.search}
           onPress={() => navigation.navigate('search')}
         />
-        <Image
-          style={style.headerImg}
-          source={require('../../assest/text.jpg')}
-          blurRadius={20}
-        />
-
-        <View style={style.btnBox}>
-          <TouchableHighlight
-            style={[style.localFile]}
-            activeOpacity={1}
-            underlayColor="rgba(255, 255, 255, 0.45)"
-            onPress={() => navigation.navigate('setting')}>
-            <Text style={style.localFileFont}>最近</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            style={[style.localFile]}
-            activeOpacity={1}
-            underlayColor="rgba(255, 255, 255, 0.45)"
-            onPress={createLocalList}>
-            <Text style={style.localFileFont}>创建歌单</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            style={[style.localFile]}
-            activeOpacity={1}
-            underlayColor="rgba(255, 255, 255, 0.45)"
-            onPress={() => navigation.navigate('localFile')}>
-            <Text style={style.localFileFont}>本地音乐</Text>
-          </TouchableHighlight>
+      </View>
+      <View style={style.btnBox}>
+        <TouchableHighlight
+          style={[style.localFile]}
+          activeOpacity={1}
+          underlayColor="rgba(245,245,245,0.45)"
+          onPress={() => navigation.navigate('setting')}>
+          <Text style={style.localFileFont}>最近</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={[style.localFile]}
+          activeOpacity={1}
+          underlayColor="rgba(245,245,245,0.45)"
+          onPress={createLocalList}>
+          <Text style={style.localFileFont}>创建歌单</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={[style.localFile]}
+          activeOpacity={1}
+          underlayColor="rgba(245,245,245,0.45)"
+          onPress={() => navigation.navigate('localFile')}>
+          <Text style={style.localFileFont}>本地音乐</Text>
+        </TouchableHighlight>
+      </View>
+      <PlatformPressable
+        style={[audio.box, { marginTop: 20 }]}
+        onPress={() => navigation.push('importSong')}>
+        <View style={audio.picBG}>
+          <Ionicons name="add" size={50} />
         </View>
-        <View style={style.fillBox} />
-        <ScrollView style={style.scroll}>
-          <PlatformPressable
-            style={[audio.box, { marginTop: 20 }]}
-            onPress={() => navigation.navigate('importSong')}>
-            <View style={audio.picBG}>
-              <Ionicons name="add" size={50} />
-            </View>
-            <View style={{ marginLeft: 20 }}>
-              <Text style={audio.font1}>导入外部歌单</Text>
-            </View>
-          </PlatformPressable>
-          {qqLists.map(item => (
-            <AudioBox key={item.title} data={item} navigation={navigation} />
-          ))}
-          <View style={{ height: 70 }} />
-        </ScrollView>
-      </ScrollView>
+        <View style={{ marginLeft: 20 }}>
+          <Text style={audio.font1}>导入外部歌单</Text>
+        </View>
+      </PlatformPressable>
+      <FlatList
+        data={qqLists}
+        renderItem={({ item }) => (
+          <AudioBox data={item} navigation={navigation} />
+        )}
+        keyExtractor={item => String(item.id)}
+      />
+      <View style={{ height: 70, width: '100%', zIndex: 10 }} />
     </SafeAreaView>
   );
 };
-const halfHeight = Dimensions.get('window').height / 2;
 const modalStyle = StyleSheet.create({
   modalBox: {
     width: '100%',
@@ -236,50 +221,32 @@ const modalStyle = StyleSheet.create({
   },
 });
 const style = StyleSheet.create({
+  searchBox: {
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
   search: {
-    position: 'absolute',
-    zIndex: 2,
-    top: 10,
-    right: 20,
-    height: 30,
+    justifyContent: 'flex-end',
   },
 
-  headerImg: {
-    top: 0,
-    left: 0,
-    zIndex: 0,
-    position: 'absolute',
-    height: halfHeight,
-    width: '100%',
-  },
-  fillBox: {
-    height: halfHeight - 20,
-    // backgroundColor: '#fff',
-  },
   btnBox: {
-    position: 'absolute',
-    top: halfHeight - 80,
-    zIndex: 2,
+    height: '7%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
   },
   localFile: {
     width: 90,
-    backgroundColor: 'rgba(255, 255, 255, 0.23)',
+    backgroundColor: '#F5F5F5',
     height: 45,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: 10,
   },
   localFileFont: {
-    color: '#fff',
-  },
-  scroll: {
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    // flex: 1,
-    height: halfHeight,
+    color: '#000',
   },
 });
 interface AudioBoxProps {
@@ -288,10 +255,8 @@ interface AudioBoxProps {
 }
 const AudioBox = (props: AudioBoxProps) => {
   const { data, navigation } = props;
-
   const toDetail = (id: number) => {
     // console.log(id);
-
     navigation.navigate('detail', { id });
   };
   return (
@@ -308,7 +273,8 @@ const audio = StyleSheet.create({
   box: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   picBG: {
     backgroundColor: '#efefef',
@@ -337,4 +303,5 @@ const audio = StyleSheet.create({
     fontSize: 12,
   },
 });
+
 export default Index;

@@ -1,6 +1,6 @@
 import { AddTrack } from 'react-native-track-player';
 import { ParamListBase } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NativeStackScreenProps, NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type MusicDataType = {
   album: string;
@@ -22,6 +22,7 @@ export interface MusicType {
 export interface MemoType {
   showToast: (text?: string) => void;
   hideToast: () => void
+  navigation?: NativeStackNavigationProp<ParamListBase, string, undefined>
 }
 export type RouterProps = NativeStackScreenProps<ParamListBase>
 export interface ToastProp extends NativeStackScreenProps<ParamListBase> {

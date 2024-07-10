@@ -15,7 +15,7 @@ import { useAppDispatch } from '../../store/index';
 import { MusicDataType, RouterProps } from '../../type/index';
 import Img from '../../components/Image';
 import TrackPlayer from 'react-native-track-player';
-import { setSongLists, setNetPlay } from '../../store/module/songState';
+import { setSongLists } from '../../store/module/songState';
 import Empty from '../../components/empty';
 const LocalFile: React.FC<RouterProps> = ({ navigation }) => {
   // const winState = useAppSelector(state => state.winState.value);
@@ -32,15 +32,12 @@ const LocalFile: React.FC<RouterProps> = ({ navigation }) => {
           setMusicData(res);
         });
     });
-
     return unsubscribe;
   }, [navigation]);
   const songPlay = async (index: number) => {
     await TrackPlayer.reset();
     await TrackPlayer.pause();
-
     dispatch(setSongLists({ list: MusicData, index }));
-    dispatch(setNetPlay(false));
     TrackPlayer.add(MusicData[index]);
     TrackPlayer.play();
   };
@@ -55,6 +52,9 @@ const LocalFile: React.FC<RouterProps> = ({ navigation }) => {
       ) : (
         <FlatList
           data={MusicData}
+          initialNumToRender={7}
+          maxToRenderPerBatch={7}
+          legacyImplementation={true}
           renderItem={item => <AudioBox {...item} onPress={songPlay} />}
           keyExtractor={(item, index) => String(index)}
         />

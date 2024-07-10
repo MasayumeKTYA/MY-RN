@@ -3,16 +3,14 @@ import {
   Text,
   View,
   StyleSheet,
-  Alert,
   NativeModules,
   TouchableHighlight,
   Platform,
-  Modal,
 } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { PlatformPressable } from '@react-navigation/elements';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import {
   readDir,
   ExternalStorageDirectoryPath,
@@ -23,7 +21,8 @@ import {
 import { androidRipple } from '../../shareVar/index';
 import storage from '../../storage/index';
 import { MusicDataType, MusicType, ToastProp } from '../../type/index';
-
+import { changeShow } from '../../store/module/songState';
+import { useAppDispatch } from '../../store/index';
 const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
   const { showToast, hideToast } = Toast;
   const [fileArr, setFileArr] = useState<ReadDirItem[]>([]);
@@ -39,7 +38,7 @@ const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
 
       setFileArr(fileItem);
     } catch (e) {
-      Alert.alert('读取文件夹出错,请从试');
+      showToast('读取文件夹出错,请从试');
     }
   };
   const [currentPath, setCurrentPath] = useState(ExternalStorageDirectoryPath);
@@ -101,7 +100,7 @@ const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
       }
     } catch (err) {
       hideToast();
-      Alert.alert('报错');
+      showToast('报错');
     }
   };
   function setStorage(res: MusicDataType[]) {
@@ -110,8 +109,13 @@ const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
     showToast('导入成功');
     setTimeout(hideToast, 1000);
   }
+  const dispatch = useAppDispatch();
   useEffect(() => {
     readDirList(ExternalStorageDirectoryPath);
+    dispatch(changeShow(false));
+    return () => {
+      dispatch(changeShow(true));
+    };
   }, []);
   return (
     <View style={style.box}>
@@ -128,6 +132,8 @@ const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
         style={style.box}
         data={fileArr}
         keyExtractor={item => item.name}
+        initialNumToRender={11}
+        maxToRenderPerBatch={11}
         ListEmptyComponent={() => {
           return (
             <View style={style.empty}>
@@ -152,7 +158,7 @@ const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
           );
         }}
       />
-      <View style={{ height: 70 }} />
+
       <TouchableHighlight
         underlayColor="#3a8ee6"
         style={style.btn_heghtBox}
@@ -216,7 +222,7 @@ const style = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     position: 'absolute',
-    bottom: 120,
+    bottom: 50,
     left: '50%',
     transform: [{ translateX: -150 }],
   },

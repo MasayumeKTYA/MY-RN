@@ -12,11 +12,12 @@ import { PlatformPressable } from '@react-navigation/elements';
 import TrackPlayer from 'react-native-track-player';
 import { MusicDataType, ToastProp } from '../../type';
 import { useAppDispatch } from '../../store/index';
-import { setSongLists, setNetPlay } from '../../store/module/songState';
+import { setSongLists } from '../../store/module/songState';
 import storage from '../../storage';
+import MemoAudio from '../../components/audio';
 
-const Detail: React.FC<ToastProp> = prop => {
-  const { route, Toast } = prop;
+const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
+  const { showToast, hideToast } = Toast;
   const dispatch = useAppDispatch();
   const songID = route.params as { id: number };
   const [lists, setLists] = useState<MusicDataType[]>([]);
@@ -46,7 +47,6 @@ const Detail: React.FC<ToastProp> = prop => {
     };
 
     dispatch(setSongLists({ list: lists, index }));
-    dispatch(setNetPlay(true));
     TrackPlayer.add(song);
 
     TrackPlayer.play();
@@ -69,6 +69,8 @@ const Detail: React.FC<ToastProp> = prop => {
             <ListsItem data={item} index={index} onClick={clickItem} />
           )}
           keyExtractor={(_, index) => String(index)}
+          maxToRenderPerBatch={11}
+          initialNumToRender={11}
         />
       )}
 

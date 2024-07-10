@@ -1,13 +1,13 @@
 import {
   View,
   StyleSheet,
-  Image,
   Text,
   Platform,
   Animated,
   Easing,
 } from 'react-native';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, memo } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { PlatformPressable } from '@react-navigation/elements';
 import TrackPlayer, {
@@ -20,20 +20,23 @@ import { useAppDispatch, useAppSelector } from '../store/index';
 import { setPlay, setSongLists } from '../store/module/songState';
 import { getSongUrl } from '../api';
 import { MemoType, MusicDataType } from '../type';
+import storage from '../storage';
 export const androidRipple = {
   borderless: true,
   foreground: Platform.OS === 'android' && Platform.Version >= 23,
   radius: 30,
 };
-
 const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
-  console.log('Audio');
   const dispatch = useAppDispatch();
-  const play = useAppSelector(state => state.songState.status);
-  const ls = useAppSelector(state => state.songState.songList);
-  const index = useAppSelector(state => state.songState.currentIndex);
-  const isLoaclPlay = useAppSelector(state => state.songState.isLoaclPlay);
+  const {
+    status: play,
+    songList: ls,
+    currentIndex: index,
+    isShow,
+  } = useAppSelector(state => state.songState);
+
   const [songDetail, setSongDetail] = useState<Track>();
+  const navigation: any = useNavigation();
   const playSong = () => {
     dispatch(setPlay(false));
     TrackPlayer.play();
@@ -62,32 +65,37 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
     dispatch(setSongLists({ index: lsIndex }));
     hideToast();
   };
-  const setCurrent = async () => {
+  const readPrePlay = async () => {
     try {
-      const currentSong = await TrackPlayer.getActiveTrack();
-
-      setSongDetail(currentSong);
+      const res = await storage.load({ key: 'current' });
+      await TrackPlayer.add(res);
+      await setCurrent();
     } catch (error) {
-      console.log(error);
+      console.log(error, 'err');
+      await TrackPlayer.setupPlayer();
+      readPrePlay();
     }
+  };
+  const setCurrent = async () => {
+    const currentSong = await TrackPlayer.getActiveTrack();
+    setSongDetail(currentSong);
   };
   useTrackPlayerEvents([Event.PlaybackState], async event => {
     console.log(event, 'useTrackPlayerEvents');
-
     switch (event.state) {
       case 'buffering':
       case 'loading':
         dispatch(setPlay(true));
         break;
       case 'playing':
-        rotateIn();
+        // rotateIn();
         setCurrent();
         dispatch(setPlay(false));
 
         break;
       case 'paused':
         dispatch(setPlay(true));
-        rotateOut();
+        // rotateOut();
         break;
       case 'error':
         dispatch(setPlay(true));
@@ -97,58 +105,41 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
         break;
     }
   });
-  //注册监听 //监听播放状态
-  //动画效果
-  const imgRef = useRef(new Animated.Value(0)).current;
 
-  const rotate = imgRef.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
-
-  let animatVal = 0;
-  const rotateIn = () => {
-    imgRef.setValue(animatVal % 1);
-
-    Animated.loop(
-      Animated.timing(imgRef, {
-        toValue: 1,
-        duration: 3000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-    ).start();
-  };
-  const rotateOut = () => {
-    imgRef.stopAnimation(val => {
-      animatVal = val;
-    });
-  };
   useEffect(() => {
-    TrackPlayer.setupPlayer();
-    setTimeout(setCurrent, 200);
+    console.log('Audio');
+    readPrePlay();
   }, []);
 
   return (
-    <View style={{ position: 'relative' }}>
-      <View style={className.box}>
-        <View style={className.contain}>
-          <Animated.View style={[{ transform: [{ rotate: rotate }] }]}>
-            <Img style={[className.pic]} uri={songDetail?.artwork ?? null} />
-          </Animated.View>
-          <Text style={className.songName} numberOfLines={1}>
-            {songDetail?.title ?? '未知歌曲'}-{songDetail?.artist ?? '未知歌曲'}
-          </Text>
-        </View>
-        <View style={className.contain}>
-          {play ? (
-            <AudioBtn name="playcircleo" onClick={playSong} />
-          ) : (
-            <AudioBtn name="pausecircleo" onClick={pauseSong} />
-          )}
-        </View>
-      </View>
-    </View>
+    <>
+      {isShow && (
+        <PlatformPressable onPress={() => navigation.navigate('SongDetail')}>
+          <View style={className.box}>
+            <View style={className.contain}>
+              {/* style={[{ transform: [{ rotate: rotate }] }]} */}
+              <Animated.View>
+                <Img
+                  style={[className.pic]}
+                  uri={songDetail?.artwork ?? null}
+                />
+              </Animated.View>
+              <Text style={className.songName} numberOfLines={1}>
+                {songDetail?.title ?? '未知歌曲'}-
+                {songDetail?.artist ?? '未知歌曲'}
+              </Text>
+            </View>
+            <View style={className.contain}>
+              {play ? (
+                <AudioBtn name="playcircleo" onClick={playSong} />
+              ) : (
+                <AudioBtn name="pausecircleo" onClick={pauseSong} />
+              )}
+            </View>
+          </View>
+        </PlatformPressable>
+      )}
+    </>
   );
 };
 interface AudioBtnProps {
@@ -195,4 +186,10 @@ const className = StyleSheet.create({
     width: 200,
   },
 });
-export default Audio;
+const MemoAudio = memo<MemoType>(
+  ({ showToast, hideToast }) => (
+    <Audio showToast={showToast} hideToast={hideToast} />
+  ),
+  () => true,
+);
+export default MemoAudio;

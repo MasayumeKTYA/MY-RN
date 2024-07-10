@@ -8,17 +8,22 @@ import {
   TextInput,
 } from 'react-native';
 
-import { Header, HeaderBackButton } from '@react-navigation/elements';
-
 import Input from './headerTitle';
 import { useEffect, useState } from 'react';
 import HeaderRight from './headerRight';
 import { getSongUrlSearch, searchSong } from '../../api/index';
-import { PlatformPressable } from '@react-navigation/elements';
-import { ListsType, searchListType } from '../../type/api';
-import { MusicDataType, ToastProp } from '../../type';
+import {
+  PlatformPressable,
+  Header,
+  HeaderBackButton,
+} from '@react-navigation/elements';
+import {
+  MusicDataType,
+  ToastProp,
+  ListsType,
+  searchListType,
+} from '../../type';
 import TrackPlayer from 'react-native-track-player';
-import { setNetPlay } from '../../store/module/songState';
 import { useAppDispatch } from '../../store';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import storage from '../../storage';
@@ -54,7 +59,6 @@ function Search(prop: ToastProp) {
       artwork: res.pic,
       album: '',
     };
-    dispatch(setNetPlay(true));
     TrackPlayer.add(song);
 
     TrackPlayer.play();
