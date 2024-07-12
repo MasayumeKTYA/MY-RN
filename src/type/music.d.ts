@@ -3,6 +3,7 @@ import { ParamListBase } from '@react-navigation/native';
 import { NativeStackScreenProps, NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type MusicDataType = {
+  id: string;
   album: string;
   artist: string | null;
   title: string | null;

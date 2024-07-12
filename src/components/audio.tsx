@@ -48,12 +48,13 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
 
   const getDetail = async () => {
     const lsIndex = index + 1;
-    const msg = ls[lsIndex].artist + ls[lsIndex].title;
+    const msg = ls[lsIndex].title;
     TrackPlayer.reset();
     showToast();
 
     const res = await getSongUrl(msg);
     const song: MusicDataType = {
+      id: '',
       url: res.src,
       artist: res.name,
       title: res.songname,
@@ -86,6 +87,7 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
       case 'buffering':
       case 'loading':
         dispatch(setPlay(true));
+
         break;
       case 'playing':
         // rotateIn();
@@ -114,28 +116,25 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
   return (
     <>
       {isShow && (
-        <PlatformPressable onPress={() => navigation.navigate('SongDetail')}>
-          <View style={className.box}>
-            <View style={className.contain}>
-              {/* style={[{ transform: [{ rotate: rotate }] }]} */}
-              <Animated.View>
-                <Img
-                  style={[className.pic]}
-                  uri={songDetail?.artwork ?? null}
-                />
-              </Animated.View>
-              <Text style={className.songName} numberOfLines={1}>
-                {songDetail?.title ?? '未知歌曲'}-
-                {songDetail?.artist ?? '未知歌曲'}
-              </Text>
-            </View>
-            <View style={className.contain}>
-              {play ? (
-                <AudioBtn name="playcircleo" onClick={playSong} />
-              ) : (
-                <AudioBtn name="pausecircleo" onClick={pauseSong} />
-              )}
-            </View>
+        <PlatformPressable
+          onPress={() => navigation.navigate('SongDetail', songDetail)}
+          style={className.box}>
+          <View style={className.contain}>
+            {/* style={[{ transform: [{ rotate: rotate }] }]} */}
+            <Animated.View>
+              <Img style={[className.pic]} uri={songDetail?.artwork ?? null} />
+            </Animated.View>
+            <Text style={className.songName} numberOfLines={1}>
+              {songDetail?.title ?? '未知歌曲'}-
+              {songDetail?.artist ?? '未知歌曲'}
+            </Text>
+          </View>
+          <View style={className.contain}>
+            {play ? (
+              <AudioBtn name="playcircleo" onClick={playSong} />
+            ) : (
+              <AudioBtn name="pausecircleo" onClick={pauseSong} />
+            )}
           </View>
         </PlatformPressable>
       )}

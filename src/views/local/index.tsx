@@ -17,7 +17,8 @@ import Img from '../../components/Image';
 import TrackPlayer from 'react-native-track-player';
 import { setSongLists } from '../../store/module/songState';
 import Empty from '../../components/empty';
-const LocalFile: React.FC<RouterProps> = ({ navigation }) => {
+import Headers from './headerComponent/index.tsx';
+const LocalFile: React.FC<RouterProps> = ({ navigation, route }) => {
   // const winState = useAppSelector(state => state.winState.value);
   const dispatch = useAppDispatch();
   const [MusicData, setMusicData] = useState<MusicDataType[]>([]);
@@ -43,8 +44,14 @@ const LocalFile: React.FC<RouterProps> = ({ navigation }) => {
   };
   return (
     <Pressable style={s.contain} onPress={() => dispatch(hidenWin())}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-
+      <Headers
+        options={{
+          headerTitle: '本地',
+          headerTitleAlign: 'center',
+        }}
+        route={route}
+        navigation={navigation}
+      />
       {MusicData.length === 0 ? (
         <View style={{ marginTop: 100 }}>
           <Empty />
@@ -52,8 +59,13 @@ const LocalFile: React.FC<RouterProps> = ({ navigation }) => {
       ) : (
         <FlatList
           data={MusicData}
-          initialNumToRender={7}
-          maxToRenderPerBatch={7}
+          initialNumToRender={2}
+          maxToRenderPerBatch={11}
+          getItemLayout={(data, index) => ({
+            length: 60,
+            offset: 60 * index,
+            index,
+          })}
           legacyImplementation={true}
           renderItem={item => <AudioBox {...item} onPress={songPlay} />}
           keyExtractor={(item, index) => String(index)}
@@ -97,7 +109,8 @@ const audio = StyleSheet.create({
   box: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 10,
+    height: 60,
   },
   container: {
     width: 50,

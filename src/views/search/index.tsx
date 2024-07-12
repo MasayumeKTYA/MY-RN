@@ -53,6 +53,7 @@ function Search(prop: ToastProp) {
     Toast.showToast();
     const res = await getSongUrlSearch(id);
     const song: MusicDataType = {
+      id: '',
       url: res.src,
       artist: res.name,
       title: res.songname,
@@ -72,6 +73,7 @@ function Search(prop: ToastProp) {
     setToastShow(true);
     const res = await getSongUrlSearch(id);
     setCurrentSong({
+      id: '',
       url: res.src,
       artist: res.name,
       title: res.songname,
@@ -218,6 +220,7 @@ const ListsItem: React.FC<ListsItemProps> = prop => {
           name="ellipsis-vertical-sharp"
           size={20}
           style={itemStyle.pic}
+          color="#000"
         />
       </PlatformPressable>
     </PlatformPressable>

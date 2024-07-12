@@ -21,8 +21,7 @@ import { PlatformPressable } from '@react-navigation/elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Img from '../../components/Image';
-import TrackPlayer from 'react-native-track-player';
-import MemoAudio from '../../components/audio';
+
 import { ToastProp, ListsType } from '../../type';
 
 const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
@@ -72,7 +71,6 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
   useEffect(() => {
     console.log('Index');
 
-    // storage.remove({ key: 'lists' });
     PermissionsAndroid.request('android.permission.READ_MEDIA_AUDIO');
   }, []);
   useEffect(() => {

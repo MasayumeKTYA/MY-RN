@@ -14,8 +14,7 @@ import Router from './src/router/index';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { Toast } from './src/components/Toast';
 import { MemoType } from './src/type';
-import { StatusBar } from 'react-native';
-
+import { StatusBar, ImageBackground } from 'react-native';
 import MemoAudio from './src/components/audio';
 
 const MyTheme = {
@@ -26,8 +25,8 @@ const MyTheme = {
     primary: 'rgb(255, 45, 85)',
   },
 };
-// StatusBar.setBackgroundColor('transparent');
-// StatusBar.setTranslucent(true);
+StatusBar.setBackgroundColor('transparent');
+StatusBar.setTranslucent(true);
 const MemoRouter = React.memo((Toast: MemoType) => <Router Toast={Toast} />);
 
 function App(): React.JSX.Element {

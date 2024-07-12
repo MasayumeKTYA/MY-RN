@@ -7,27 +7,25 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { getSongUrl } from '../../api/index';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { PlatformPressable } from '@react-navigation/elements';
 import TrackPlayer from 'react-native-track-player';
 import { MusicDataType, ToastProp } from '../../type';
 import { useAppDispatch } from '../../store/index';
 import { setSongLists } from '../../store/module/songState';
 import storage from '../../storage';
-import MemoAudio from '../../components/audio';
-
 const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
   const { showToast, hideToast } = Toast;
   const dispatch = useAppDispatch();
   const songID = route.params as { id: number };
   const [lists, setLists] = useState<MusicDataType[]>([]);
-  const [loading, setLoading] = useState(true);
+
   const detailInit = async () => {
     try {
       const res = await storage.load({ key: String(songID.id) });
+      console.log(res);
 
       setLists(res);
-      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -39,6 +37,7 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
     Toast.showToast();
     const res = await getSongUrl(msg);
     const song: MusicDataType = {
+      id: '',
       url: res.src,
       artist: res.name,
       title: res.songname,
@@ -53,26 +52,26 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
     Toast.hideToast();
     await storage.save({ key: 'current', data: song });
   };
+
   useEffect(() => {
     detailInit();
   }, []);
   return (
     <View style={css.box}>
-      {loading ? (
-        <View style={css.loading}>
-          <ActivityIndicator size="large" color="pink" />
-        </View>
-      ) : (
-        <FlatList
-          data={lists}
-          renderItem={({ item, index }) => (
-            <ListsItem data={item} index={index} onClick={clickItem} />
-          )}
-          keyExtractor={(_, index) => String(index)}
-          maxToRenderPerBatch={11}
-          initialNumToRender={11}
-        />
-      )}
+      <FlatList
+        data={lists}
+        renderItem={({ item, index }) => {
+          return <ListsItem data={item} index={index} onClick={clickItem} />;
+        }}
+        keyExtractor={item => item.id}
+        maxToRenderPerBatch={2}
+        initialNumToRender={11}
+        getItemLayout={(data, index) => ({
+          length: 60,
+          offset: 60 * index,
+          index,
+        })}
+      />
 
       <View style={{ height: 70 }} />
     </View>
