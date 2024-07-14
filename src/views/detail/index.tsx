@@ -5,12 +5,13 @@ import {
   FlatList,
   Dimensions,
   ActivityIndicator,
+  NativeModules,
 } from 'react-native';
 import { getSongUrl } from '../../api/index';
 import { useEffect, useState, memo } from 'react';
 import { PlatformPressable } from '@react-navigation/elements';
 import TrackPlayer from 'react-native-track-player';
-import { MusicDataType, ToastProp } from '../../type';
+import { MusicDataType, MusicType, ToastProp } from '../../type';
 import { useAppDispatch } from '../../store/index';
 import { setSongLists } from '../../store/module/songState';
 import storage from '../../storage';
@@ -19,16 +20,14 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
   const dispatch = useAppDispatch();
   const songID = route.params as { id: number };
   const [lists, setLists] = useState<MusicDataType[]>([]);
-
+  //选择此路径
+  const { Music }: MusicType = NativeModules as MusicType;
   const detailInit = async () => {
     try {
       const res = await storage.load({ key: String(songID.id) });
-      console.log(res);
 
       setLists(res);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   //播放
   const clickItem = async (msg: string, index: number) => {
@@ -44,6 +43,8 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
       artwork: res.pic,
       album: '',
     };
+    // const timer = await Music.getSongTimer(res.src);
+    // console.log(timer, timer);
 
     dispatch(setSongLists({ list: lists, index }));
     TrackPlayer.add(song);
@@ -64,7 +65,7 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
           return <ListsItem data={item} index={index} onClick={clickItem} />;
         }}
         keyExtractor={item => item.id}
-        maxToRenderPerBatch={2}
+        maxToRenderPerBatch={11}
         initialNumToRender={11}
         getItemLayout={(data, index) => ({
           length: 60,

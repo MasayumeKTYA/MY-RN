@@ -6,7 +6,8 @@ import {
 import { ParamListBase, RouteProp } from '@react-navigation/native';
 import React from 'react';
 import { MemoType, ToastProp } from '../type/index';
-
+import { createDrawerNavigator } from '@react-navigation/drawer';
+const Drawer = createDrawerNavigator();
 import {
   Index,
   Setting,

@@ -37,14 +37,6 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
 
   const [songDetail, setSongDetail] = useState<Track>();
   const navigation: any = useNavigation();
-  const playSong = () => {
-    dispatch(setPlay(false));
-    TrackPlayer.play();
-  };
-  const pauseSong = () => {
-    dispatch(setPlay(true));
-    TrackPlayer.pause();
-  };
 
   const getDetail = async () => {
     const lsIndex = index + 1;
@@ -72,7 +64,6 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
       await TrackPlayer.add(res);
       await setCurrent();
     } catch (error) {
-      console.log(error, 'err');
       await TrackPlayer.setupPlayer();
       readPrePlay();
     }
@@ -87,17 +78,13 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
       case 'buffering':
       case 'loading':
         dispatch(setPlay(true));
-
         break;
       case 'playing':
-        // rotateIn();
         setCurrent();
         dispatch(setPlay(false));
-
         break;
       case 'paused':
         dispatch(setPlay(true));
-        // rotateOut();
         break;
       case 'error':
         dispatch(setPlay(true));
@@ -131,9 +118,21 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
           </View>
           <View style={className.contain}>
             {play ? (
-              <AudioBtn name="playcircleo" onClick={playSong} />
+              <AudioBtn
+                name="playcircleo"
+                onClick={() => {
+                  dispatch(setPlay(false));
+                  TrackPlayer.play();
+                }}
+              />
             ) : (
-              <AudioBtn name="pausecircleo" onClick={pauseSong} />
+              <AudioBtn
+                name="pausecircleo"
+                onClick={() => {
+                  dispatch(setPlay(true));
+                  TrackPlayer.pause();
+                }}
+              />
             )}
           </View>
         </PlatformPressable>

@@ -14,7 +14,6 @@ const Img: React.FC<ImgProps> = ({ uri, style, blur = 0 }) => {
       if (!Expression.test(uri)) {
         url = 'file://' + url;
       }
-      console.log(url);
 
       setMyComponents(
         <Image source={{ uri: url }} style={style} blurRadius={blur} />,

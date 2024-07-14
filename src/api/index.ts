@@ -34,8 +34,6 @@ export async function searchSong(data: string) {
 
 //歌单获取播放url
 export async function getSongUrl(data: string) {
-  console.log(data);
-
   // return axios.get('http://ovoa.cc/api/QQmusic.php', data);
   const respone = await fetch(`http://www.2t58.com/so/${data}.html`);
   const res = await respone.text();

@@ -68,8 +68,6 @@ const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
   const confirmPath = async () => {
     showToast();
     try {
-      console.log(currentPath);
-
       let pathLists = await readDir(currentPath);
       const res: MusicDataType[] = await storage.load({ key: 'storagePath' });
       const musicRegex = /\.(mp3|ogg)$/i;
@@ -89,6 +87,7 @@ const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
           writeFile(picPath, soundRespone.artwork, 'base64');
           soundRespone.artwork = picPath;
         }
+        soundRespone.id = `${index}`;
         res.push(soundRespone);
 
         if (index === pathLists.length - 1) {

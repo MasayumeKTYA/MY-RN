@@ -52,12 +52,9 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
       title: songListsName,
     };
 
-    console.log(lists);
     setQQLists([...qqLists, lists]);
     setModalShow(false);
     setSongListsName('');
-    console.log(qqLists);
-
     storage.save({
       key: 'lists',
       data: [...qqLists, lists],

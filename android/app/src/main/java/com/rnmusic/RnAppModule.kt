@@ -35,7 +35,6 @@ class RnAppModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
   @ReactMethod
   fun  setUrl(url: String,size:Int,promise: Promise){
     this.retriever.setDataSource(url)
-
     val objectMap: WritableMap = Arguments.createMap()
     val picArray = this.retriever.embeddedPicture
     val str = picArray?.let { Base64.encode(it,) }
@@ -44,7 +43,6 @@ class RnAppModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
     val title = this.retriever.extractMetadata(7)
     val time = this.retriever.extractMetadata(9)
     val type = this.retriever.extractMetadata(12)
-
     objectMap.putString("album", album)
     objectMap.putString("artist",author)
     objectMap.putString("title",title)
@@ -56,8 +54,17 @@ class RnAppModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
 
     objectMap.putInt("size",size)
     objectMap.putString("url",url)
-
-
+    promise.resolve(objectMap)
+  }
+  @OptIn(ExperimentalEncodingApi::class)
+  @ReactMethod
+  fun  getSongTimer(url: String,promise: Promise){
+    this.retriever.setDataSource(url)
+    val objectMap: WritableMap = Arguments.createMap()
+    val time = this.retriever.extractMetadata(9)
+    if (time != null) {
+      objectMap.putInt("duration", time.toInt()/1000)
+    }
     promise.resolve(objectMap)
   }
 }

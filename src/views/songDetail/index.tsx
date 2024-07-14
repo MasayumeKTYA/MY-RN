@@ -5,48 +5,103 @@ import {
   StatusBar,
   Text,
 } from 'react-native';
-import { changeShow } from '../../store/module/songState';
-import { useAppDispatch } from '../../store/index';
+import {
+  changeShow,
+  setPlay,
+  setSongLists,
+} from '../../store/module/songState';
+import { useAppDispatch, useAppSelector } from '../../store/index';
 import { useEffect, useState } from 'react';
 import TrackPlayer, { Track } from 'react-native-track-player';
-import { RouterProps } from '../../type';
+import { MusicDataType, ToastProp } from '../../type';
 import Img from '../../components/Image';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Slider from '@react-native-community/slider';
+import { Ionicons, AntDesign, defaultIcon } from '../../icon/index';
 import Nav from './nav';
-import { rpx } from '../../tool/rpx';
+import { getSongUrl } from '../../api';
+import SliderComponent from './slider';
 const StatusBarHeight = StatusBar.currentHeight;
-const SongDetail: React.FC<RouterProps> = ({ navigation, route }) => {
+const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
   const dispatch = useAppDispatch();
+  const { showToast, hideToast } = Toast;
   //获取当前播放歌曲
-
+  const {
+    status: play,
+    songList,
+    currentIndex,
+  } = useAppSelector(state => state.songState);
   const [songDetail, setSongDetail] = useState<Track>();
-  // const [source, setSource] = useState<any>();
+  const [source, setSource] = useState<any>(defaultIcon);
+
+  //1 下一首 2 上一首
+  const nextOrPreview = async (type: 'next' | 'pre') => {
+    let playIndex = 0;
+    const map = {
+      next: () => {
+        if (currentIndex === songList.length - 1) {
+          playIndex = 0;
+        } else {
+          playIndex = currentIndex + 1;
+        }
+      },
+      pre: () => {
+        if (currentIndex === 0) {
+          playIndex = songList.length - 1;
+        } else {
+          playIndex = currentIndex - 1;
+        }
+      },
+    };
+    map[type]();
+    const msg = songList[playIndex].title;
+    TrackPlayer.reset();
+    showToast();
+    const res = await getSongUrl(msg);
+    const song: MusicDataType = {
+      id: '',
+      url: res.src,
+      artist: res.name,
+      title: res.songname,
+      artwork: res.pic,
+      album: '',
+    };
+    setSongDetail(song);
+    setSource(song.artwork ? { uri: song?.artwork } : defaultIcon);
+    TrackPlayer.add(song);
+    TrackPlayer.play();
+    dispatch(setSongLists({ index: playIndex }));
+    hideToast();
+  };
   const setCurrent = async () => {
     const currentSong = await TrackPlayer.getActiveTrack();
     setSongDetail(currentSong);
+    if (!currentSong?.artwork) {
+      setSource(defaultIcon);
+      return;
+    }
+    let uri = currentSong.artwork;
+    const Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+    if (!Expression.test(uri)) {
+      uri = 'file://' + uri;
+    }
+    setSource({ uri });
   };
-  const obj: any = route.params;
-
-  const source = obj.artwork
-    ? { uri: obj?.artwork }
-    : require('../../assest/text.jpg');
-  console.log(source);
 
   useEffect(() => {
     dispatch(changeShow(false));
-    setSongDetail(obj);
     return () => {
       dispatch(changeShow(true));
     };
   }, []);
+  useEffect(() => {
+    setCurrent();
+  }, [currentIndex]);
   return (
     <>
       <ImageBackground
         source={source}
         resizeMode="cover"
         style={style.background}
-        blurRadius={30}>
+        blurRadius={50}>
         <View style={{ height: StatusBarHeight }} />
         <Nav
           navigation={navigation}
@@ -57,24 +112,45 @@ const SongDetail: React.FC<RouterProps> = ({ navigation, route }) => {
           <Img uri={songDetail?.artwork ?? null} style={style.pic} />
         </View>
         <View style={style.layOne}>
-          <Ionicons name="arrow-down" size={20} color="#fff" />
-          <Ionicons name="ellipsis-vertical-sharp" size={20} color="#fff" />
+          <Ionicons name="arrow-down" size={20} color="#000" />
+          <Ionicons name="ellipsis-vertical-sharp" size={20} color="#000" />
         </View>
-        <View style={style.slider}>
-          <Text style={style.time}>00:00</Text>
-          <Slider
-            style={{ width: rpx(580), height: 40 }}
-            minimumTrackTintColor={'#cccccc'}
-            maximumTrackTintColor={'#999999'}
-            thumbTintColor={'#dddddd'}
-            minimumValue={0}
-          />
-          <Text style={style.time}>00:00</Text>
-        </View>
+        <SliderComponent />
         <View style={style.playBar}>
-          <Ionicons name="play-skip-back-sharp" size={30} color="#fff" />
-          <Ionicons name="caret-forward-circle-sharp" size={50} color="#fff" />
-          <Ionicons name="play-skip-forward" size={30} color="#fff" />
+          <Ionicons
+            name="play-skip-back-sharp"
+            size={30}
+            color="#000"
+            onPress={() => nextOrPreview('pre')}
+          />
+
+          {play ? (
+            <AntDesign
+              name="play"
+              size={50}
+              color="#000"
+              onPress={() => {
+                dispatch(setPlay(false));
+                TrackPlayer.play();
+              }}
+            />
+          ) : (
+            <AntDesign
+              name="pausecircle"
+              size={50}
+              color="#000"
+              onPress={() => {
+                dispatch(setPlay(true));
+                TrackPlayer.pause();
+              }}
+            />
+          )}
+          <Ionicons
+            name="play-skip-forward"
+            size={30}
+            color="#000"
+            onPress={() => nextOrPreview('next')}
+          />
         </View>
       </ImageBackground>
     </>
@@ -105,7 +181,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   time: {
-    color: '#fff',
+    color: '#000',
     fontSize: 12,
   },
   playBar: {

@@ -28,6 +28,7 @@ import { useAppDispatch } from '../../store';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import storage from '../../storage';
 import ModalAudio from './modalBox';
+import { changeShow } from '../../store/module/songState';
 function Search(prop: ToastProp) {
   const { navigation, Toast } = prop;
   const [searchVal, setSearchVal] = useState('');
@@ -86,8 +87,6 @@ function Search(prop: ToastProp) {
   };
   //选择当前歌单
   const saveSong = async (id: number) => {
-    console.log(currentSong);
-
     if (currentSong === null) return;
     const songs: MusicDataType[] = await storage.load({ key: String(id) });
     const lists: ListsType[] = await storage.load({ key: 'lists' });
@@ -96,8 +95,6 @@ function Search(prop: ToastProp) {
     songs.push(currentSong);
     setToastShow(false);
     currentSong = null;
-    console.log(lists[index]);
-    console.log([...songs]);
 
     await storage.save({ key: String(id), data: [...songs] });
     await storage.save({ key: 'lists', data: [...lists] });

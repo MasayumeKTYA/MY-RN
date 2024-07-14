@@ -11,11 +11,15 @@ const Nav: React.FC<NavProp> = ({ navigation, title }) => {
       <Ionicons
         name="arrow-down"
         size={25}
-        color="#fff"
+        color="#000"
         onPress={() => navigation.goBack()}
         style={{ marginHorizontal: 11 }}
       />
-      <Text style={Font.title}>{title}</Text>
+      <View style={{ width: 150, alignItems: 'center' }}>
+        <Text style={Font.title} numberOfLines={1}>
+          {title}
+        </Text>
+      </View>
       <HeaderBackButton style={{ opacity: 0 }} />
     </View>
   );
@@ -38,7 +42,7 @@ const Font = StyleSheet.create({
       fontSize: 20,
       fontFamily: 'sans-serif-medium',
       fontWeight: 'normal',
-      color: '#fff',
+      color: '#000',
     },
     default: {
       fontSize: 18,
