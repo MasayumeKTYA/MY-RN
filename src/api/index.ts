@@ -1,4 +1,4 @@
-import { searchListType } from '../type/api';
+import { MusicDataType } from '@/type';
 import Fetch from '../tool/index';
 const axios = new Fetch();
 //搜索歌曲
@@ -19,13 +19,16 @@ export async function searchSong(data: string) {
     songTitle = songTitle.replace(/&nbsp;/g, ' ');
     songs.push([songId, songTitle]);
   }
-  const searchLists: searchListType[] = [];
+  const searchLists: MusicDataType[] = [];
   songs.forEach(item => {
     const split = item[1].split('-');
-    const obj: searchListType = {
-      name: split[1],
+    const obj: MusicDataType = {
+      title: split[1],
       id: item[0],
       artist: split[0],
+      album: '',
+      artwork: '',
+      url: '',
     };
     searchLists.push(obj);
   });

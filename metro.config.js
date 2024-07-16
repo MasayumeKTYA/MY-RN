@@ -7,8 +7,9 @@ const path = require('path');
  * @type {import('metro-config').MetroConfig}
  */
 const config = {
-  
+    
 };
 
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+
 

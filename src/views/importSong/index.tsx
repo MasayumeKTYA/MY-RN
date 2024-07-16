@@ -36,7 +36,7 @@ const ImportSong: React.FC<ToastProp> = ({ Toast }) => {
     const song = data.songlist;
 
     const createLists: ListsType = {
-      id: indexLists.length,
+      id: `${indexLists.length}`,
       isLocal: false,
       picurl: data.logo,
       num: data.total_song_num,
@@ -48,13 +48,14 @@ const ImportSong: React.FC<ToastProp> = ({ Toast }) => {
 
     const musicArray: MusicDataType[] = [];
 
-    song.forEach((item: any) => {
-      const obj = {
+    song.forEach((item: any, index: number) => {
+      const obj: MusicDataType = {
         artwork: '',
         album: item.albumname,
         artist: item.singer[0].name,
         title: item.songorig,
         url: '',
+        id: `${index}`,
       };
       musicArray.push(obj);
     });
@@ -63,7 +64,7 @@ const ImportSong: React.FC<ToastProp> = ({ Toast }) => {
       key: storageId,
       data: musicArray,
     });
-    showToast('导入成功');
+    showToast(`导入成功,共${musicArray.length}首`);
     setTimeout(hideToast, 1000);
   };
   return (

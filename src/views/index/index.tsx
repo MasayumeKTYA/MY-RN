@@ -12,17 +12,14 @@ import {
   FlatList,
 } from 'react-native';
 import { useState } from 'react';
-import storage from '../../storage/index';
+import storage from '@/storage/index';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect } from 'react';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ParamListBase } from '@react-navigation/native';
 import { PlatformPressable } from '@react-navigation/elements';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Img from '../../components/Image';
-
-import { ToastProp, ListsType } from '../../type';
+import { AntDesign, Ionicons } from '@/icon/index';
+import { ToastProp, ListsType } from '@/type';
+import AudioBox from './audioBox';
+import { guid } from '@/tool/tool';
 
 const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
   const { showToast, hideToast } = Toast;
@@ -46,7 +43,7 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
     const filterList = qqLists.filter(item => item.isLocal);
     const lists: ListsType = {
       isLocal: true,
-      id: filterList.length,
+      id: guid(),
       picurl: null,
       num: 0,
       title: songListsName,
@@ -64,7 +61,13 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
       data: [],
     });
   };
-
+  //刷新列表
+  const Refresh = async () => {
+    const res: ListsType[] = await storage.load({
+      key: 'lists',
+    });
+    setQQLists(res);
+  };
   useEffect(() => {
     console.log('Index');
 
@@ -72,13 +75,7 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
   }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      storage
-        .load({
-          key: 'lists',
-        })
-        .then((res: ListsType[]) => {
-          setQQLists(res);
-        });
+      Refresh();
     });
     return unsubscribe;
   }, [navigation]);
@@ -97,6 +94,7 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
               value={songListsName}
               style={modalStyle.modalInput}
               onChangeText={text => setSongListsName(text)}
+              placeholder="请输入..."
             />
             <View style={modalStyle.modalBtn}>
               <TouchableHighlight
@@ -107,9 +105,9 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
                 <Text style={modalStyle.TouchableFont}>取消</Text>
               </TouchableHighlight>
               <TouchableHighlight
-                style={[modalStyle.Touchable, { backgroundColor: '#6ccf70' }]}
+                style={[modalStyle.Touchable, { backgroundColor: '#555555' }]}
                 activeOpacity={1}
-                underlayColor="rgba(255, 255, 255, 0.45)"
+                underlayColor="rgba(0, 0, 0, 0.45)"
                 onPress={confirmCreate}>
                 <Text style={(modalStyle.TouchableFont, { color: '#fff' })}>
                   确认
@@ -152,19 +150,19 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
         </TouchableHighlight>
       </View>
       <PlatformPressable
-        style={[audio.box, { marginTop: 20 }]}
+        style={[style.box, { marginTop: 20 }]}
         onPress={() => navigation.push('importSong')}>
-        <View style={audio.picBG}>
+        <View style={style.picBG}>
           <Ionicons name="add" size={50} />
         </View>
         <View style={{ marginLeft: 20 }}>
-          <Text style={audio.font1}>导入外部歌单</Text>
+          <Text style={style.font1}>导入外部歌单</Text>
         </View>
       </PlatformPressable>
       <FlatList
         data={qqLists}
         renderItem={({ item }) => (
-          <AudioBox data={item} navigation={navigation} />
+          <AudioBox data={item} navigation={navigation} onConfirm={Refresh} />
         )}
         keyExtractor={item => String(item.id)}
       />
@@ -183,7 +181,7 @@ const modalStyle = StyleSheet.create({
   modalContain: {
     width: '60%',
     backgroundColor: '#fff',
-    borderRadius: 20,
+    borderRadius: 10,
     height: 150,
     alignItems: 'center',
   },
@@ -194,7 +192,7 @@ const modalStyle = StyleSheet.create({
   modalInput: {
     width: '70%',
     backgroundColor: '#efefef',
-    borderRadius: 10,
+    borderRadius: 5,
     height: 40,
     marginTop: 10,
   },
@@ -211,7 +209,7 @@ const modalStyle = StyleSheet.create({
     width: '40%',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 5,
     height: 30,
   },
 });
@@ -243,28 +241,6 @@ const style = StyleSheet.create({
   localFileFont: {
     color: '#000',
   },
-});
-interface AudioBoxProps {
-  data: ListsType;
-  navigation: NativeStackNavigationProp<ParamListBase, string, undefined>;
-}
-const AudioBox = (props: AudioBoxProps) => {
-  const { data, navigation } = props;
-  const toDetail = (id: number) => {
-    // console.log(id);
-    navigation.navigate('detail', { id });
-  };
-  return (
-    <PlatformPressable style={audio.box} onPress={() => toDetail(data.id)}>
-      <Img style={audio.container} uri={data.picurl} />
-      <View>
-        <Text style={audio.font1}>{data.title}</Text>
-        <Text style={audio.font2}>{data.num}首</Text>
-      </View>
-    </PlatformPressable>
-  );
-};
-const audio = StyleSheet.create({
   box: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -277,25 +253,10 @@ const audio = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
   },
-  container: {
-    width: 50,
-    height: 50,
-
-    marginRight: 20,
-  },
-  container1: {
-    width: 50,
-    height: 50,
-
-    marginRight: 20,
-  },
   font1: {
     fontSize: 16,
     color: '#000',
     fontWeight: 'bold',
-  },
-  font2: {
-    fontSize: 12,
   },
 });
 

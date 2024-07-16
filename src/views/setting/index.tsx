@@ -7,10 +7,13 @@ import {
   Modal,
   ImageBackground,
   StatusBar,
+  FlatList,
+  ScrollView,
 } from 'react-native';
 // import { decrement, increment } from '../store/module/winState';
-import { useAppSelector, useAppDispatch } from '../store/index';
-import { ToastProp } from '../type';
+import { useAppSelector, useAppDispatch } from '@/store/index';
+import { ToastProp } from '@/type';
+import { defaultIcon } from '@/icon';
 StatusBar.setBackgroundColor('transparent');
 StatusBar.setTranslucent(true);
 const Setting: React.FC<ToastProp> = ({ Toast }) => {
@@ -23,13 +26,18 @@ const Setting: React.FC<ToastProp> = ({ Toast }) => {
   const duringToast = () => {
     showToast('ss');
   };
+  const InitData = [];
+  for (let index = 0; index < 100; index++) {
+    InitData.push({ id: `${index}`, title: `测试${index}` });
+  }
+  console.log(InitData);
+
   return (
     <ImageBackground
       resizeMode="cover"
-      source={require('../assest/text.jpg')}
+      source={defaultIcon}
       style={{ flex: 1 }}>
-      <Text>我是设置页面</Text>
-      <Button title="++" onPress={duringToast} />
+      <Text>setting</Text>
     </ImageBackground>
   );
 };

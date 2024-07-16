@@ -1,5 +1,5 @@
 export interface ListsType {
-  id: number;
+  id: string;
   isLocal: boolean;
   picurl: string | null;
   num: number;

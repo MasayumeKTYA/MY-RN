@@ -3,7 +3,7 @@ interface ToastProps {
   visible: boolean;
   title: string;
 }
-export const Toast: React.FC<ToastProps> = ({ visible, title }) => {
+const Toast: React.FC<ToastProps> = ({ visible, title }) => {
   return (
     <Modal
       animationType="fade"
@@ -60,3 +60,4 @@ const css = StyleSheet.create({
     borderRadius: 10,
   },
 });
+export default Toast;

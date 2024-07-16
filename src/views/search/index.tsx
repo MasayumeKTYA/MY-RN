@@ -1,5 +1,4 @@
 import {
-  Text,
   View,
   StyleSheet,
   KeyboardAvoidingView,
@@ -11,28 +10,18 @@ import {
 import Input from './headerTitle';
 import { useEffect, useState } from 'react';
 import HeaderRight from './headerRight';
-import { getSongUrlSearch, searchSong } from '../../api/index';
-import {
-  PlatformPressable,
-  Header,
-  HeaderBackButton,
-} from '@react-navigation/elements';
-import {
-  MusicDataType,
-  ToastProp,
-  ListsType,
-  searchListType,
-} from '../../type';
+import { getSongUrlSearch, searchSong } from '@/api/index';
+import { Header, HeaderBackButton } from '@react-navigation/elements';
+import { MusicDataType, ToastProp, ListsType } from '@/type';
 import TrackPlayer from 'react-native-track-player';
-import { useAppDispatch } from '../../store';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import storage from '../../storage';
+import { useAppDispatch } from '@/store';
+import storage from '@/storage';
 import ModalAudio from './modalBox';
-import { changeShow } from '../../store/module/songState';
+import { SongBox } from '@/components';
 function Search(prop: ToastProp) {
   const { navigation, Toast } = prop;
   const [searchVal, setSearchVal] = useState('');
-  const [lists, setLists] = useState<searchListType[]>([]);
+  const [lists, setLists] = useState<MusicDataType[]>([]);
 
   const TextChange = (val: string) => {
     setSearchVal(val);
@@ -86,7 +75,7 @@ function Search(prop: ToastProp) {
     setToastShow(false);
   };
   //选择当前歌单
-  const saveSong = async (id: number) => {
+  const saveSong = async (id: string) => {
     if (currentSong === null) return;
     const songs: MusicDataType[] = await storage.load({ key: String(id) });
     const lists: ListsType[] = await storage.load({ key: 'lists' });
@@ -150,7 +139,7 @@ function Search(prop: ToastProp) {
         <FlatList
           data={lists}
           renderItem={({ item, index }) => (
-            <ListsItem
+            <SongBox
               data={item}
               index={index}
               onPress={getUrl}
@@ -188,72 +177,72 @@ const css = StyleSheet.create({
     borderRadius: 10,
   },
 });
-type ListsItemProps = {
-  data: searchListType;
-  index: number;
-  onPress: (id: string) => void;
-  onEdit: (data: string) => void;
-};
-const ListsItem: React.FC<ListsItemProps> = prop => {
-  const { data, index, onPress, onEdit } = prop;
+// type ListsItemProps = {
+//   data: searchListType;
+//   index: number;
+//   onPress: (id: string) => void;
+//   onEdit: (data: string) => void;
+// };
+// const ListsItem: React.FC<ListsItemProps> = prop => {
+//   const { data, index, onPress, onEdit } = prop;
 
-  return (
-    <PlatformPressable style={itemStyle.box} onPress={() => onPress(data.id)}>
-      <View style={itemStyle.outer}>
-        <Text style={itemStyle.index}>{index + 1}</Text>
-        <View style={itemStyle.fontBox}>
-          <Text style={itemStyle.title} numberOfLines={1}>
-            {data.name}
-          </Text>
-          <Text style={itemStyle.subtitle} numberOfLines={1}>
-            {data.artist}
-          </Text>
-        </View>
-      </View>
-      <PlatformPressable
-        style={itemStyle.outerPic}
-        onPress={() => onEdit(data.id)}>
-        <Ionicons
-          name="ellipsis-vertical-sharp"
-          size={20}
-          style={itemStyle.pic}
-          color="#000"
-        />
-      </PlatformPressable>
-    </PlatformPressable>
-  );
-};
-const itemStyle = StyleSheet.create({
-  box: {
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    flexDirection: 'row',
-  },
-  outer: {
-    flexDirection: 'row',
-  },
-  outerPic: {
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  index: {
-    marginLeft: 20,
-  },
-  fontBox: {
-    marginLeft: 30,
-    width: 190,
-  },
-  title: {
-    fontSize: 16,
-    color: '#000',
-  },
-  subtitle: {
-    fontSize: 10,
-    marginTop: 5,
-  },
-  pic: {},
-});
+//   return (
+//     <PlatformPressable style={itemStyle.box} onPress={() => onPress(data.id)}>
+//       <View style={itemStyle.outer}>
+//         <Text style={itemStyle.index}>{index + 1}</Text>
+//         <View style={itemStyle.fontBox}>
+//           <Text style={itemStyle.title} numberOfLines={1}>
+//             {data.name}
+//           </Text>
+//           <Text style={itemStyle.subtitle} numberOfLines={1}>
+//             {data.artist}
+//           </Text>
+//         </View>
+//       </View>
+//       <PlatformPressable
+//         style={itemStyle.outerPic}
+//         onPress={() => onEdit(data.id)}>
+//         <Ionicons
+//           name="ellipsis-vertical-sharp"
+//           size={20}
+//           style={itemStyle.pic}
+//           color="#000"
+//         />
+//       </PlatformPressable>
+//     </PlatformPressable>
+//   );
+// };
+// const itemStyle = StyleSheet.create({
+//   box: {
+//     height: 50,
+//     alignItems: 'center',
+//     justifyContent: 'space-around',
+//     flexDirection: 'row',
+//   },
+//   outer: {
+//     flexDirection: 'row',
+//   },
+//   outerPic: {
+//     width: 30,
+//     height: 30,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   index: {
+//     marginLeft: 20,
+//   },
+//   fontBox: {
+//     marginLeft: 30,
+//     width: 190,
+//   },
+//   title: {
+//     fontSize: 16,
+//     color: '#000',
+//   },
+//   subtitle: {
+//     fontSize: 10,
+//     marginTop: 5,
+//   },
+//   pic: {},
+// });
 export default Search;

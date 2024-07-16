@@ -56,16 +56,6 @@ class RnAppModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
     objectMap.putString("url",url)
     promise.resolve(objectMap)
   }
-  @OptIn(ExperimentalEncodingApi::class)
-  @ReactMethod
-  fun  getSongTimer(url: String,promise: Promise){
-    this.retriever.setDataSource(url)
-    val objectMap: WritableMap = Arguments.createMap()
-    val time = this.retriever.extractMetadata(9)
-    if (time != null) {
-      objectMap.putInt("duration", time.toInt()/1000)
-    }
-    promise.resolve(objectMap)
-  }
+
 }
  

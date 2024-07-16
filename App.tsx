@@ -8,14 +8,14 @@ import 'react-native-gesture-handler';
 import React, { useCallback, useEffect } from 'react';
 // import type {PropsWithChildren} from 'react';
 
-import store from './src/store/index';
+import store from '@/store/index';
 import { Provider } from 'react-redux';
-import Router from './src/router/index';
+import Router from '@/router/index';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { Toast } from './src/components/Toast';
-import { MemoType } from './src/type';
-import { StatusBar, ImageBackground } from 'react-native';
-import MemoAudio from './src/components/audio';
+import { Toast } from '@/components';
+import { MemoType } from '@/type';
+import { StatusBar } from 'react-native';
+import MemoAudio from '@/components/audio';
 
 const MyTheme = {
   ...DefaultTheme,

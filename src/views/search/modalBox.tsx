@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
-import Img from '../../components/Image';
+import Img from '@/components/Image';
 import { PlatformPressable } from '@react-navigation/elements';
-import { ListsType } from '../../type/api';
+import { ListsType } from '@/type/api';
 interface AudioBoxProps {
   data: ListsType;
-  onPress: (id: number) => void;
+  onPress: (id: string) => void;
 }
-const ModalAudio: React.FC<AudioBoxProps> = ({ data, onPress }) => {
+const modalBox: React.FC<AudioBoxProps> = ({ data, onPress }) => {
   return (
     <PlatformPressable style={audio.box} onPress={() => onPress(data.id)}>
       <Img style={audio.container} uri={data.picurl} />
@@ -50,4 +50,4 @@ const audio = StyleSheet.create({
     fontSize: 12,
   },
 });
-export default ModalAudio;
+export default modalBox;
