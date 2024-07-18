@@ -4,7 +4,6 @@ import {
   View,
   PermissionsAndroid,
   TouchableHighlight,
-  ScrollView,
   StyleSheet,
   Modal,
   KeyboardAvoidingView,
@@ -20,6 +19,7 @@ import { AntDesign, Ionicons } from '@/icon/index';
 import { ToastProp, ListsType } from '@/type';
 import AudioBox from './audioBox';
 import { guid } from '@/tool/tool';
+import MemoAudio from '@/components/audio';
 
 const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
   const { showToast, hideToast } = Toast;
@@ -118,10 +118,16 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
         </View>
       </Modal>
       <View style={style.searchBox}>
-        <View />
+        <AntDesign
+          name="menuunfold"
+          size={26}
+          color={'#000'}
+          onPress={() => navigation.openDrawer()}
+        />
         <AntDesign
           size={26}
           name="search1"
+          color={'#000'}
           style={style.search}
           onPress={() => navigation.navigate('search')}
         />
@@ -151,7 +157,7 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
       </View>
       <PlatformPressable
         style={[style.box, { marginTop: 20 }]}
-        onPress={() => navigation.push('importSong')}>
+        onPress={() => navigation.navigate('importSong')}>
         <View style={style.picBG}>
           <Ionicons name="add" size={50} />
         </View>
@@ -167,6 +173,7 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
         keyExtractor={item => String(item.id)}
       />
       <View style={{ height: 70, width: '100%', zIndex: 10 }} />
+      <MemoAudio showToast={showToast} hideToast={hideToast} />
     </SafeAreaView>
   );
 };

@@ -1,12 +1,12 @@
 import {
   createDrawerNavigator,
   DrawerNavigationOptions,
+  DrawerScreenProps,
 } from '@react-navigation/drawer';
-import { Index, Setting } from '@/views/index.ts';
+import { Index } from '@/views/index.ts';
 import { MemoType, ToastProp } from '@/type/music.js';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamListBase, RouteProp } from '@react-navigation/native';
-import HomeHeader from '@/views/index/header';
+import DrawerBox from './drawContent';
 const Drawer = createDrawerNavigator();
 
 type RouterProps = {
@@ -46,13 +46,13 @@ const MyDrawer = (prop: RouterProps) => {
       initialRouteName="index"
       screenOptions={{
         headerShown: false,
-        // drawerContent:()=>
-      }}>
+      }}
+      drawerContent={prop => <DrawerBox {...prop} />}>
       {route.map(item => {
         const option = { ...baseOptions, ...item.options };
         return (
           <Drawer.Screen options={option} name={item.name} key={item.name}>
-            {(prop: NativeStackScreenProps<ParamListBase>) => (
+            {(prop: DrawerScreenProps<ParamListBase>) => (
               <item.component {...prop} Toast={Toast} />
             )}
           </Drawer.Screen>

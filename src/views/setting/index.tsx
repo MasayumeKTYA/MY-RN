@@ -1,44 +1,47 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Animated,
-  Button,
-  Modal,
-  ImageBackground,
-  StatusBar,
-  FlatList,
-  ScrollView,
-} from 'react-native';
-// import { decrement, increment } from '../store/module/winState';
-import { useAppSelector, useAppDispatch } from '@/store/index';
+import { Text, View, StyleSheet } from 'react-native';
+
 import { ToastProp } from '@/type';
 import { defaultIcon } from '@/icon';
-StatusBar.setBackgroundColor('transparent');
-StatusBar.setTranslucent(true);
+import { PlatformPressable } from '@react-navigation/elements';
 const Setting: React.FC<ToastProp> = ({ Toast }) => {
   const { showToast } = Toast;
-  // const count = useSelector<TypedUseSelectorHook<RootStates>>(
-  //   state => state.conter.value,
-  // );
-  // const count = useAppSelector(state => state.conter.value);
-  const dispatch = useAppDispatch();
-  const duringToast = () => {
-    showToast('ss');
-  };
-  const InitData = [];
-  for (let index = 0; index < 100; index++) {
-    InitData.push({ id: `${index}`, title: `测试${index}` });
-  }
-  console.log(InitData);
 
   return (
-    <ImageBackground
-      resizeMode="cover"
-      source={defaultIcon}
-      style={{ flex: 1 }}>
-      <Text>setting</Text>
-    </ImageBackground>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <Text style={style.SettingBox}>下载</Text>
+      <PlatformPressable style={style.SettingItem}>
+        <Text style={style.itemFont}>下载路径</Text>
+        <Text
+          style={[
+            style.itemFont,
+            {
+              width: 150,
+              textAlign: 'right',
+            },
+          ]}
+          numberOfLines={4}>
+          sadadad
+        </Text>
+      </PlatformPressable>
+    </View>
   );
 };
+const style = StyleSheet.create({
+  SettingBox: {
+    marginLeft: 20,
+    marginTop: 20,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  SettingItem: {
+    paddingHorizontal: 10,
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  itemFont: {
+    color: '#000',
+  },
+});
 export default Setting;

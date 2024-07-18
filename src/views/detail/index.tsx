@@ -8,6 +8,7 @@ import { useAppDispatch } from '@/store/index';
 import { setSongLists } from '@/store/module/songState';
 import storage from '@/storage';
 import { SongBox } from '@/components';
+import MemoAudio from '@/components/audio';
 // import {
 //   GestureHandlerRootView,
 //   ScrollView,
@@ -80,6 +81,7 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
       />
 
       <View style={{ height: 70 }} />
+      <MemoAudio showToast={showToast} hideToast={hideToast} />
     </View>
   );
 };

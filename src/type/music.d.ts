@@ -1,10 +1,9 @@
 import { AddTrack } from 'react-native-track-player';
 import { ParamListBase } from '@react-navigation/native';
 import {
-  NativeStackScreenProps,
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
-
+import { DrawerScreenProps } from '@react-navigation/drawer'
 export type MusicDataType = {
   id: string; //id
   album: string; //专辑
@@ -29,7 +28,7 @@ export interface MemoType {
   hideToast: () => void;
   navigation?: NativeStackNavigationProp<ParamListBase, string, undefined>;
 }
-export type RouterProps = NativeStackScreenProps<ParamListBase>;
-export interface ToastProp extends NativeStackScreenProps<ParamListBase> {
+export type RouterProps = DrawerScreenProps<ParamListBase>;
+export interface ToastProp extends DrawerScreenProps<ParamListBase> {
   Toast: MemoType;
 }

@@ -50,7 +50,7 @@ function App(): React.JSX.Element {
     <Provider store={store}>
       <NavigationContainer theme={MyTheme}>
         <MemoRouter showToast={showToast} hideToast={hideToast} />
-        <MemoAudio showToast={showToast} hideToast={hideToast} />
+        {/* <MemoAudio showToast={showToast} hideToast={hideToast} /> */}
       </NavigationContainer>
       <Toast visible={toastVisible} title={text} />
     </Provider>

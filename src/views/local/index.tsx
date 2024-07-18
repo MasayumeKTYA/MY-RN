@@ -3,13 +3,15 @@ import { View, StyleSheet, Pressable, FlatList } from 'react-native';
 import storage from '@/storage/index';
 import { hidenWin } from '@/store/module/winState';
 import { useAppDispatch } from '@/store/index';
-import { MusicDataType, RouterProps } from '@/type/index';
+import { MusicDataType, ToastProp } from '@/type/index';
 import TrackPlayer from 'react-native-track-player';
 import { setSongLists } from '@/store/module/songState';
 import { Empty, SongBox } from '@/components';
 import Headers from './headerComponent/index.tsx';
-const LocalFile: React.FC<RouterProps> = ({ navigation, route }) => {
+import MemoAudio from '@/components/audio.tsx';
+const LocalFile: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
   // const winState = useAppSelector(state => state.winState.value);
+  const { showToast, hideToast } = Toast;
   const dispatch = useAppDispatch();
   const [MusicData, setMusicData] = useState<MusicDataType[]>([]);
 
@@ -73,6 +75,7 @@ const LocalFile: React.FC<RouterProps> = ({ navigation, route }) => {
         />
       )}
       <View style={{ height: 70 }} />
+      <MemoAudio showToast={showToast} hideToast={hideToast} />
     </Pressable>
   );
 };

@@ -16,11 +16,11 @@ import TrackPlayer, {
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Img from './Image';
-import { useAppDispatch, useAppSelector } from '../store/index';
-import { setPlay, setSongLists } from '../store/module/songState';
-import { getSongUrl } from '../api';
-import { MemoType, MusicDataType } from '../type';
-import storage from '../storage';
+import { useAppDispatch, useAppSelector } from '@/store/index';
+import { setPlay, setSongLists } from '@/store/module/songState';
+import { getSongUrl } from '@/api';
+import { MemoType, MusicDataType } from '@/type';
+import storage from '@/storage';
 export const androidRipple = {
   borderless: true,
   foreground: Platform.OS === 'android' && Platform.Version >= 23,
@@ -156,7 +156,7 @@ const className = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     bottom: 0,
-    zIndex: 2,
+    zIndex: 1,
     height: 70,
     backgroundColor: '#fff',
     flexDirection: 'row',

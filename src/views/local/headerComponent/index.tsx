@@ -6,12 +6,12 @@ import {
   PlatformPressable,
   HeaderBackButton,
 } from '@react-navigation/elements';
-import { androidRipple } from '../../../shareVar';
+import { androidRipple } from '@/shareVar';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import RightScreen from './RightScreen';
-import { showWin } from '../../../store/module/winState';
-import { useAppDispatch, useAppSelector } from '../../../store/index';
-const Headers = (prop: NativeStackHeaderProps) => {
+import { showWin } from '@/store/module/winState';
+import { useAppDispatch, useAppSelector } from '@/store/index';
+const Headers = (prop: any) => {
   const { options, route, navigation } = prop;
   const winState = useAppSelector(state => state.winState.value);
   const dispatch = useAppDispatch();

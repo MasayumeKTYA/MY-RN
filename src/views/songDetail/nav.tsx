@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, Platform } from 'react-native';
-import { RouterProps } from '../../type';
+import { RouterProps } from '@/type';
 import { HeaderBackButton } from '@react-navigation/elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 type NavProp = RouterProps & {

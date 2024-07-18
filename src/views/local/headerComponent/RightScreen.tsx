@@ -3,8 +3,8 @@ import { StyleSheet, Text } from 'react-native';
 import { PlatformPressable } from '@react-navigation/elements';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ParamListBase } from '@react-navigation/native';
-import { hidenWin } from '../../../store/module/winState';
-import { useAppDispatch } from '../../../store/index';
+import { hidenWin } from '@/store/module/winState';
+import { useAppDispatch } from '@/store/index';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 interface RightScreenProps {
   navigation: NativeStackNavigationProp<ParamListBase, string, undefined>;

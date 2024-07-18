@@ -1,8 +1,8 @@
 import { Button, StyleSheet, TextInput, View } from 'react-native';
 import { useState } from 'react';
-import { ImportHttp } from '../../api';
-import storage from '../../storage/index';
-import { ListsType, MusicDataType, ToastProp } from '../../type';
+import { ImportHttp } from '@/api';
+import storage from '@/storage/index';
+import { ListsType, MusicDataType, ToastProp } from '@/type';
 const ImportSong: React.FC<ToastProp> = ({ Toast }) => {
   const { showToast, hideToast } = Toast;
   const [url, SetUrl] = useState('');

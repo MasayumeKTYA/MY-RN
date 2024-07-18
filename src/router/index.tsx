@@ -1,6 +1,5 @@
 import {
   NativeStackNavigationOptions,
-  NativeStackScreenProps,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import { ParamListBase, RouteProp } from '@react-navigation/native';
@@ -17,6 +16,7 @@ import {
   SongDetail,
 } from '@/views/index.ts';
 import MyDrawer from './Draw.tsx';
+import { DrawerScreenProps } from '@react-navigation/drawer';
 const Stack = createNativeStackNavigator();
 type RouterProps = {
   Toast: MemoType;
@@ -39,6 +39,13 @@ const route: routeType[] = [
     name: 'index',
     options: {
       headerShown: false,
+    },
+  },
+  {
+    component: Setting,
+    name: 'setting',
+    options: {
+      title: '设置',
     },
   },
   {
@@ -102,7 +109,7 @@ export default function Router(prop: RouterProps) {
         const option = { ...baseOptions, ...item.options };
         return (
           <Stack.Screen name={item.name} options={option} key={item.name}>
-            {(prop: NativeStackScreenProps<ParamListBase>) => (
+            {(prop: DrawerScreenProps<ParamListBase>) => (
               <item.component {...prop} Toast={Toast} />
             )}
           </Stack.Screen>

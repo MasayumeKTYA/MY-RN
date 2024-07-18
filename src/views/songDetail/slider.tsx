@@ -1,6 +1,6 @@
 import Slider from '@react-native-community/slider';
 import { View, Text, StyleSheet } from 'react-native';
-import { rpx } from '../../tool/rpx';
+import { rpx } from '@/tool/rpx';
 import TrackPlayer, { useProgress } from 'react-native-track-player';
 type SliderProps = {
   onValChange: (val: number) => void;

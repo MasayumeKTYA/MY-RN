@@ -18,11 +18,11 @@ import {
   writeFile,
   ExternalDirectoryPath,
 } from 'react-native-fs';
-import { androidRipple } from '../../shareVar/index';
-import storage from '../../storage/index';
-import { MusicDataType, MusicType, ToastProp } from '../../type/index';
-import { changeShow } from '../../store/module/songState';
-import { useAppDispatch } from '../../store/index';
+import { androidRipple } from '@/shareVar/index';
+import storage from '@/storage/index';
+import { MusicDataType, MusicType, ToastProp } from '@/type/index';
+// import { changeShow } from '@/store/module/songState';
+// import { useAppDispatch } from '@/store/index';
 const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
   const { showToast, hideToast } = Toast;
   const [fileArr, setFileArr] = useState<ReadDirItem[]>([]);
@@ -108,13 +108,10 @@ const SelectFile: React.FC<ToastProp> = ({ Toast }) => {
     showToast('导入成功');
     setTimeout(hideToast, 1000);
   }
-  const dispatch = useAppDispatch();
   useEffect(() => {
     readDirList(ExternalStorageDirectoryPath);
-    dispatch(changeShow(false));
-    return () => {
-      dispatch(changeShow(true));
-    };
+
+    return () => {};
   }, []);
   return (
     <View style={style.box}>

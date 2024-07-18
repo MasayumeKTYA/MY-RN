@@ -6,7 +6,6 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
-
 import Input from './headerTitle';
 import { useEffect, useState } from 'react';
 import HeaderRight from './headerRight';
@@ -18,8 +17,9 @@ import { useAppDispatch } from '@/store';
 import storage from '@/storage';
 import ModalAudio from './modalBox';
 import { SongBox } from '@/components';
-function Search(prop: ToastProp) {
-  const { navigation, Toast } = prop;
+import MemoAudio from '@/components/audio';
+const Search: React.FC<ToastProp> = ({ navigation, Toast }) => {
+  const { showToast, hideToast } = Toast;
   const [searchVal, setSearchVal] = useState('');
   const [lists, setLists] = useState<MusicDataType[]>([]);
 
@@ -29,10 +29,10 @@ function Search(prop: ToastProp) {
   let inputRef: React.RefObject<TextInput> | null = null;
   //搜索
   const clickSearch = async () => {
-    Toast.showToast();
+    showToast();
     const res = await searchSong(searchVal);
     setLists(res);
-    Toast.hideToast();
+    hideToast();
     inputRef?.current?.blur();
   };
   //播放 获取url
@@ -40,7 +40,7 @@ function Search(prop: ToastProp) {
   const getUrl = async (id: string) => {
     await TrackPlayer.reset();
     await TrackPlayer.pause();
-    Toast.showToast();
+    showToast();
     const res = await getSongUrlSearch(id);
     const song: MusicDataType = {
       id: '',
@@ -53,7 +53,7 @@ function Search(prop: ToastProp) {
     TrackPlayer.add(song);
 
     TrackPlayer.play();
-    Toast.hideToast();
+    hideToast();
   };
   //编辑弹出
   const [toastShow, setToastShow] = useState(false);
@@ -150,9 +150,10 @@ function Search(prop: ToastProp) {
         />
       </View>
       <View style={{ height: 70 }}></View>
+      <MemoAudio showToast={showToast} hideToast={hideToast} />
     </KeyboardAvoidingView>
   );
-}
+};
 const css = StyleSheet.create({
   box: {
     backgroundColor: '#fafafa',

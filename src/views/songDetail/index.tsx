@@ -5,19 +5,15 @@ import {
   StatusBar,
   Text,
 } from 'react-native';
-import {
-  changeShow,
-  setPlay,
-  setSongLists,
-} from '../../store/module/songState';
-import { useAppDispatch, useAppSelector } from '../../store/index';
+import { changeShow, setPlay, setSongLists } from '@/store/module/songState';
+import { useAppDispatch, useAppSelector } from '@/store/index';
 import { useEffect, useState } from 'react';
 import TrackPlayer, { Track } from 'react-native-track-player';
-import { MusicDataType, ToastProp } from '../../type';
-import Img from '../../components/Image';
-import { Ionicons, AntDesign, defaultIcon } from '../../icon/index';
+import { MusicDataType, ToastProp } from '@/type';
+import Img from '@/components/Image';
+import { Ionicons, AntDesign, defaultIcon } from '@/icon/index';
 import Nav from './nav';
-import { getSongUrl } from '../../api';
+import { getSongUrl } from '@/api';
 import SliderComponent from './slider';
 const StatusBarHeight = StatusBar.currentHeight;
 const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {

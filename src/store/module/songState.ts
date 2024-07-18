@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { MusicDataType } from '../../type/index';
+import { MusicDataType } from '@/type/index';
 
 export const counterSlice = createSlice({
   name: 'songState',
