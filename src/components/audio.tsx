@@ -64,6 +64,8 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
       await TrackPlayer.add(res);
       await setCurrent();
     } catch (error) {
+      console.log(error);
+
       await TrackPlayer.setupPlayer();
       readPrePlay();
     }

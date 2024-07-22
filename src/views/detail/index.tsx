@@ -20,22 +20,19 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
   const [lists, setLists] = useState<MusicDataType[]>([]);
   //选择此路径
   const detailInit = async () => {
-    try {
-      const res: MusicDataType[] = await storage.load({
-        key: songID.id,
-      });
-      console.log(lists);
-      setLists(res);
-      console.log(lists);
-    } catch (error) {}
+    const res: MusicDataType[] = await storage.load({
+      key: songID.id,
+    });
+    console.log(res);
+
+    setLists(res);
   };
   //播放
   const clickItem = async (id: string, index: number) => {
     TrackPlayer.reset();
     TrackPlayer.pause();
-    // Toast.showToast();
+    Toast.showToast();
     console.log(lists);
-
     try {
       const msg = lists[index].title;
       const res = await getSongUrl(msg);
@@ -53,15 +50,15 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
       TrackPlayer.add(song);
 
       TrackPlayer.play();
-      // Toast.hideToast();
+      Toast.hideToast();
       await storage.save({ key: 'current', data: song });
     } catch (error) {
-      console.log(error);
+      Toast.hideToast();
     }
   };
 
   useEffect(() => {
-    setTimeout(detailInit, 100);
+    setTimeout(detailInit, 0);
   }, []);
   const keyExtractor = useCallback(
     (item: any, i: number) => `${i}-${item.id}`,
@@ -71,16 +68,19 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
     <View style={css.box}>
       <FlatList
         data={lists}
-        renderItem={useCallback(({ item, index }: renderItemType) => {
-          return (
-            <SongBox
-              data={item}
-              index={index}
-              onPress={clickItem}
-              onEdit={() => {}}
-            />
-          );
-        }, [])}
+        renderItem={useCallback(
+          ({ item, index }: renderItemType) => {
+            return (
+              <SongBox
+                data={item}
+                index={index}
+                onPress={clickItem}
+                onEdit={() => {}}
+              />
+            );
+          },
+          [lists],
+        )}
         keyExtractor={keyExtractor}
         initialNumToRender={13}
         updateCellsBatchingPeriod={100}

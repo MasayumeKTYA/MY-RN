@@ -87,11 +87,12 @@ const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
   const downFn = async () => {
     if (songDetail?.url === undefined) return;
 
-    const res = await downloadFile({
-      fromUrl: songDetail?.url,
-      toFile: savePath,
-    }).promise;
-    console.log(res);
+    try {
+      await downloadFile({
+        fromUrl: songDetail?.url,
+        toFile: `${savePath}/${songDetail.title}.mp3`,
+      }).promise;
+    } catch (error) {}
   };
   useEffect(() => {
     dispatch(changeShow(false));

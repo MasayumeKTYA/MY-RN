@@ -64,10 +64,26 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
   };
   //刷新列表
   const Refresh = async () => {
-    const res: ListsType[] = await storage.load({
-      key: 'lists',
-    });
-    setQQLists(res);
+    try {
+      const res: ListsType[] = await storage.load({
+        key: 'lists',
+      });
+      setQQLists(res);
+    } catch (error) {
+      //初始化创建
+      await storage.save({ key: 'lists', data: [] });
+      await storage.save({
+        key: 'current',
+        data: {
+          id: '',
+          url: '',
+          artist: '未知',
+          title: '未知',
+          artwork: null,
+          album: '',
+        },
+      });
+    }
   };
   //创建文件
   const createDownload = async () => {
@@ -138,13 +154,13 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
         />
       </View>
       <View style={style.btnBox}>
-        <TouchableHighlight
+        {/* <TouchableHighlight
           style={[style.localFile]}
           activeOpacity={1}
           underlayColor="rgba(245,245,245,0.45)"
           onPress={() => navigation.navigate('setting')}>
           <Text style={style.localFileFont}>最近</Text>
-        </TouchableHighlight>
+        </TouchableHighlight> */}
         <TouchableHighlight
           style={[style.localFile]}
           activeOpacity={1}
@@ -177,7 +193,7 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
         )}
         keyExtractor={item => String(item.id)}
       />
-      <View style={{ height: 70, width: '100%', zIndex: 10 }} />
+      <View style={{ height: 70 }} />
       <MemoAudio showToast={showToast} hideToast={hideToast} />
     </SafeAreaView>
   );

@@ -22,7 +22,7 @@ const LocalFile: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
           key: 'storagePath',
         })
         .then((res: MusicDataType[]) => {
-          setMusicData(res);
+          setTimeout(() => setMusicData(res), 350);
         });
     });
     return unsubscribe;
@@ -55,8 +55,8 @@ const LocalFile: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
       ) : (
         <FlatList
           data={MusicData}
-          initialNumToRender={2}
-          maxToRenderPerBatch={11}
+          initialNumToRender={13}
+          maxToRenderPerBatch={26}
           getItemLayout={(data, index) => ({
             length: 60,
             offset: 60 * index,

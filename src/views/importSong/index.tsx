@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { ImportHttp } from '@/api';
 import storage from '@/storage/index';
 import { ListsType, MusicDataType, ToastProp } from '@/type';
+import { guid } from '@/tool/tool';
 const ImportSong: React.FC<ToastProp> = ({ Toast }) => {
   const { showToast, hideToast } = Toast;
   const [url, SetUrl] = useState('');
   const [type, setType] = useState(1);
   const UrlRequest = async () => {
+    showToast();
     if (url === '') {
       showToast('请输入内容');
       setTimeout(hideToast, 1000);
@@ -21,6 +23,7 @@ const ImportSong: React.FC<ToastProp> = ({ Toast }) => {
     }
 
     const match = url.match(regex);
+
     if (match === null) {
       showToast('链接出错');
       setTimeout(hideToast, 1000);
@@ -32,17 +35,18 @@ const ImportSong: React.FC<ToastProp> = ({ Toast }) => {
     const indexLists: ListsType[] = await storage.load({
       key: 'lists',
     });
+
     const data = res.cdlist[0];
     const song = data.songlist;
 
     const createLists: ListsType = {
-      id: `${indexLists.length}`,
+      id: guid(),
       isLocal: false,
       picurl: data.logo,
       num: data.total_song_num,
       title: data.dissname,
     };
-    const storageId = String(indexLists.length);
+    const storageId = createLists.id;
     indexLists.push(createLists);
     console.log(createLists);
 
