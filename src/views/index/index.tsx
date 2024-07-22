@@ -20,6 +20,7 @@ import { ToastProp, ListsType } from '@/type';
 import AudioBox from './audioBox';
 import { guid } from '@/tool/tool';
 import MemoAudio from '@/components/audio';
+import { mkdir, ExternalDirectoryPath } from 'react-native-fs';
 
 const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
   const { showToast, hideToast } = Toast;
@@ -68,9 +69,13 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
     });
     setQQLists(res);
   };
+  //创建文件
+  const createDownload = async () => {
+    await mkdir(ExternalDirectoryPath + '/downLoad');
+  };
   useEffect(() => {
     console.log('Index');
-
+    createDownload();
     PermissionsAndroid.request('android.permission.READ_MEDIA_AUDIO');
   }, []);
   useEffect(() => {

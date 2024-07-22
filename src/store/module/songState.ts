@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { MusicDataType } from '@/type/index';
-
+import { ExternalDirectoryPath } from 'react-native-fs';
 export const counterSlice = createSlice({
   name: 'songState',
   initialState: {
@@ -8,6 +8,7 @@ export const counterSlice = createSlice({
     songList: [] as MusicDataType[],
     currentIndex: -1,
     isShow: true,
+    savePath: ExternalDirectoryPath + '/downLoad'
   },
   reducers: {
     //设置播放状态
@@ -25,10 +26,14 @@ export const counterSlice = createSlice({
     changeShow: (state, action) => {
       state.isShow = action.payload;
     },
+    //设置路径
+    setDownload: (state, action) => {
+      state.savePath = action.payload
+    }
   },
 });
 
 // 为每个 case reducer 函数生成 Action creators
-export const { setPlay, setSongLists, changeShow } = counterSlice.actions;
+export const { setPlay, setSongLists, changeShow, setDownload } = counterSlice.actions;
 
 export default counterSlice.reducer;

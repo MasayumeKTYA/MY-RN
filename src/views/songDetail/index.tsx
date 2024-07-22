@@ -15,6 +15,7 @@ import { Ionicons, AntDesign, defaultIcon } from '@/icon/index';
 import Nav from './nav';
 import { getSongUrl } from '@/api';
 import SliderComponent from './slider';
+import { downloadFile } from 'react-native-fs';
 const StatusBarHeight = StatusBar.currentHeight;
 const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
   const dispatch = useAppDispatch();
@@ -24,6 +25,7 @@ const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
     status: play,
     songList,
     currentIndex,
+    savePath,
   } = useAppSelector(state => state.songState);
   const [songDetail, setSongDetail] = useState<Track>();
   const [source, setSource] = useState<any>(defaultIcon);
@@ -81,7 +83,16 @@ const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
     }
     setSource({ uri });
   };
+  //下载歌曲
+  const downFn = async () => {
+    if (songDetail?.url === undefined) return;
 
+    const res = await downloadFile({
+      fromUrl: songDetail?.url,
+      toFile: savePath,
+    }).promise;
+    console.log(res);
+  };
   useEffect(() => {
     dispatch(changeShow(false));
     return () => {
@@ -108,7 +119,7 @@ const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
           <Img uri={songDetail?.artwork ?? null} style={style.pic} />
         </View>
         <View style={style.layOne}>
-          <Ionicons name="arrow-down" size={20} color="#000" />
+          <Ionicons name="arrow-down" size={20} color="#000" onPress={downFn} />
           <Ionicons name="ellipsis-vertical-sharp" size={20} color="#000" />
         </View>
         <SliderComponent />

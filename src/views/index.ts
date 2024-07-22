@@ -8,5 +8,5 @@ export { default as Detail } from './detail';
 export { default as Search } from './search/';
 export { default as ImportSong } from './importSong';
 export { default as SongDetail } from './songDetail';
-
+export { default as DownloadPath } from './downloadPath'
 

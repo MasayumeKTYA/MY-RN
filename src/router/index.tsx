@@ -14,6 +14,7 @@ import {
   Search,
   ImportSong,
   SongDetail,
+  DownloadPath,
 } from '@/views/index.ts';
 import MyDrawer from './Draw.tsx';
 import { DrawerScreenProps } from '@react-navigation/drawer';
@@ -90,6 +91,13 @@ const route: routeType[] = [
     options: {
       headerShown: false,
       animation: 'slide_from_bottom',
+    },
+  },
+  {
+    component: DownloadPath,
+    name: 'downloadPath',
+    options: {
+      title: '选择下载路径',
     },
   },
 ];

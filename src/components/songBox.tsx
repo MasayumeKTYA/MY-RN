@@ -1,5 +1,5 @@
 import { MusicDataType } from '@/type';
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { PlatformPressable } from '@react-navigation/elements';
@@ -15,8 +15,6 @@ const SongBox: React.FC<ListsItemProps> = ({
   onPress,
   onEdit,
 }) => {
-  console.log(index);
-
   return (
     <PlatformPressable
       style={itemStyle.box}
@@ -78,4 +76,9 @@ const itemStyle = StyleSheet.create({
   },
   pic: {},
 });
-export default SongBox;
+export default memo<ListsItemProps>(
+  ({ data, index, onPress, onEdit }) => (
+    <SongBox data={data} index={index} onPress={onPress} onEdit={onEdit} />
+  ),
+  () => true,
+);
