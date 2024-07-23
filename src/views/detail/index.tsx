@@ -8,6 +8,7 @@ import { setSongLists } from '@/store/module/songState';
 import storage from '@/storage';
 import { SongBox } from '@/components';
 import MemoAudio from '@/components/audio';
+import MdoalSongDetail from '@/components/modalSongDetail';
 // import {
 //   GestureHandlerRootView,
 //   ScrollView,
@@ -23,8 +24,6 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
     const res: MusicDataType[] = await storage.load({
       key: songID.id,
     });
-    console.log(res);
-
     setLists(res);
   };
   //播放
@@ -32,7 +31,6 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
     TrackPlayer.reset();
     TrackPlayer.pause();
     Toast.showToast();
-    console.log(lists);
     try {
       const msg = lists[index].title;
       const res = await getSongUrl(msg);
@@ -56,9 +54,11 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
       Toast.hideToast();
     }
   };
-
+  //弹窗
+  const [visible1, setVisible1] = useState(false);
+  const [dialogData, setDialogData] = useState<MusicDataType | null>(null);
   useEffect(() => {
-    setTimeout(detailInit, 0);
+    setTimeout(detailInit, 350);
   }, []);
   const keyExtractor = useCallback(
     (item: any, i: number) => `${i}-${item.id}`,
@@ -66,6 +66,11 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
   );
   return (
     <View style={css.box}>
+      <MdoalSongDetail
+        dialogData={dialogData}
+        visible1={visible1}
+        onClose={() => setVisible1(false)}
+      />
       <FlatList
         data={lists}
         renderItem={useCallback(
@@ -75,7 +80,10 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
                 data={item}
                 index={index}
                 onPress={clickItem}
-                onEdit={() => {}}
+                onEdit={data => {
+                  setVisible1(true);
+                  setDialogData(data);
+                }}
               />
             );
           },
@@ -83,7 +91,7 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
         )}
         keyExtractor={keyExtractor}
         initialNumToRender={13}
-        updateCellsBatchingPeriod={100}
+        updateCellsBatchingPeriod={150}
         maxToRenderPerBatch={26}
         getItemLayout={(data, index) => ({
           length: 50,

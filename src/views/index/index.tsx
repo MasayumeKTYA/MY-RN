@@ -83,6 +83,7 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
           album: '',
         },
       });
+      await storage.save({ key: 'storagePath', data: [] });
     }
   };
   //创建文件

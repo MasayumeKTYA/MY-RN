@@ -7,7 +7,7 @@ type ListsItemProps = {
   data: MusicDataType;
   index: number;
   onPress: (id: string, index: number) => void;
-  onEdit: (data: string) => void;
+  onEdit: (data: MusicDataType) => void;
 };
 const SongBox: React.FC<ListsItemProps> = ({
   data,
@@ -32,7 +32,7 @@ const SongBox: React.FC<ListsItemProps> = ({
       </View>
       <PlatformPressable
         style={itemStyle.outerPic}
-        onPress={() => onEdit(data.id)}>
+        onPress={() => onEdit(data)}>
         <Ionicons
           name="ellipsis-vertical-sharp"
           size={20}

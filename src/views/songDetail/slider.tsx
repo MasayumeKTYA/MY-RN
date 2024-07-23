@@ -20,9 +20,9 @@ const SliderComponent = () => {
       <Text style={style.time}>{start}</Text>
       <Slider
         style={{ width: rpx(580), height: 40 }}
-        minimumTrackTintColor={'#000'}
+        minimumTrackTintColor={'#00adb5'}
         maximumTrackTintColor={'#444'}
-        thumbTintColor={'#000'}
+        thumbTintColor={'#00adb5'}
         maximumValue={duration}
         minimumValue={0}
         value={position}
@@ -40,7 +40,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   time: {
-    color: '#000',
+    color: '#00adb5',
     fontSize: 12,
   },
 });

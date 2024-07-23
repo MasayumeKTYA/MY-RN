@@ -86,12 +86,14 @@ const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
   //下载歌曲
   const downFn = async () => {
     if (songDetail?.url === undefined) return;
-
+    showToast('已加入下载列表');
     try {
       await downloadFile({
         fromUrl: songDetail?.url,
         toFile: `${savePath}/${songDetail.title}.mp3`,
       }).promise;
+
+      setTimeout(hideToast, 100);
     } catch (error) {}
   };
   useEffect(() => {
@@ -120,15 +122,20 @@ const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
           <Img uri={songDetail?.artwork ?? null} style={style.pic} />
         </View>
         <View style={style.layOne}>
-          <Ionicons name="arrow-down" size={20} color="#000" onPress={downFn} />
-          <Ionicons name="ellipsis-vertical-sharp" size={20} color="#000" />
+          <Ionicons
+            name="arrow-down"
+            size={20}
+            color="#00adb5"
+            onPress={downFn}
+          />
+          <Ionicons name="ellipsis-vertical-sharp" size={20} color="#00adb5" />
         </View>
         <SliderComponent />
         <View style={style.playBar}>
           <Ionicons
             name="play-skip-back-sharp"
             size={30}
-            color="#000"
+            color="#00adb5"
             onPress={() => nextOrPreview('pre')}
           />
 
@@ -136,7 +143,7 @@ const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
             <AntDesign
               name="play"
               size={50}
-              color="#000"
+              color="#00adb5"
               onPress={() => {
                 dispatch(setPlay(false));
                 TrackPlayer.play();
@@ -146,7 +153,7 @@ const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
             <AntDesign
               name="pausecircle"
               size={50}
-              color="#000"
+              color="#00adb5"
               onPress={() => {
                 dispatch(setPlay(true));
                 TrackPlayer.pause();
@@ -156,7 +163,7 @@ const SongDetail: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
           <Ionicons
             name="play-skip-forward"
             size={30}
-            color="#000"
+            color="#00adb5"
             onPress={() => nextOrPreview('next')}
           />
         </View>
@@ -169,6 +176,7 @@ const style = StyleSheet.create({
   background: {
     width: '100%',
     height: '100%',
+    // opacity: 0.5,
   },
   picBox: {
     height: '70%',
@@ -189,7 +197,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   time: {
-    color: '#000',
+    color: '#00adb5',
     fontSize: 12,
   },
   playBar: {

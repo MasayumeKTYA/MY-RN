@@ -61,7 +61,10 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
   const readPrePlay = async () => {
     try {
       const res = await storage.load({ key: 'current' });
-      await TrackPlayer.add(res);
+      const queue = await TrackPlayer.getQueue();
+      if (queue.length === 0) {
+        await TrackPlayer.add(res);
+      }
       await setCurrent();
     } catch (error) {
       console.log(error);
@@ -72,6 +75,7 @@ const Audio: React.FC<MemoType> = ({ showToast, hideToast }) => {
   };
   const setCurrent = async () => {
     const currentSong = await TrackPlayer.getActiveTrack();
+
     setSongDetail(currentSong);
   };
   useTrackPlayerEvents([Event.PlaybackState], async event => {

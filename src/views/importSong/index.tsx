@@ -70,6 +70,7 @@ const ImportSong: React.FC<ToastProp> = ({ Toast }) => {
     });
     showToast(`导入成功,共${musicArray.length}首`);
     setTimeout(hideToast, 1000);
+    // nav
   };
   return (
     <View style={ImportCss.box}>

@@ -15,7 +15,7 @@ import { MusicDataType, ToastProp, ListsType } from '@/type';
 import TrackPlayer from 'react-native-track-player';
 import { useAppDispatch } from '@/store';
 import storage from '@/storage';
-import ModalAudio from './modalBox';
+import ModalAudio from '../../components/modalBox2';
 import { SongBox } from '@/components';
 import MemoAudio from '@/components/audio';
 const Search: React.FC<ToastProp> = ({ navigation, Toast }) => {
@@ -83,7 +83,6 @@ const Search: React.FC<ToastProp> = ({ navigation, Toast }) => {
     lists[index].num += 1;
     songs.push(currentSong);
     setToastShow(false);
-    currentSong = null;
 
     await storage.save({ key: String(id), data: [...songs] });
     await storage.save({ key: 'lists', data: [...lists] });
