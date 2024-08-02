@@ -9,6 +9,10 @@ type MdoalSongDetailType = {
   onClose: Function;
   dialogData: MusicDataType | null;
 };
+type songSelectType = {
+  id: string;
+  name: string;
+};
 const MdoalSongDetail: React.FC<MdoalSongDetailType> = ({
   visible1,
   onClose,
@@ -28,12 +32,20 @@ const MdoalSongDetail: React.FC<MdoalSongDetailType> = ({
     await storage.save({ key: String(id), data: [...songs] });
     await storage.save({ key: 'lists', data: [...lists] });
   };
-  const select = [
-    {
-      id: '1',
-      name: '歌手',
-    },
-  ];
+  //删除
+  const deleteClick = () => {
+    console.log(dialogData);
+
+    onClose();
+  };
+  //下载
+  const downloadClick = () => {
+    onClose();
+  };
+  //添加歌单
+  const addSonglists = () => {
+    onClose();
+  };
   useEffect(() => {
     storage
       .load({
@@ -47,15 +59,11 @@ const MdoalSongDetail: React.FC<MdoalSongDetailType> = ({
     <>
       {visible1 ? (
         <View
-          onTouchEnd={() => {
-            console.log('visible1');
-          }}
           style={{
             width: '100%',
             height: '100%',
             backgroundColor: 'rgba(0,0,0,0.2)',
             position: 'absolute',
-            zIndex: 111,
           }}
         />
       ) : (
@@ -68,12 +76,14 @@ const MdoalSongDetail: React.FC<MdoalSongDetailType> = ({
         statusBarTranslucent={true}
         onRequestClose={() => onClose()}>
         <View style={css.modalBox}>
+          <View style={css.modalTop} onTouchEndCapture={() => onClose()} />
           <View style={css.modalFlatList}>
-            <FlatList
-              data={select}
-              renderItem={({ item }) => <ModalBox1 data={item} />}
-              keyExtractor={item => String(item.id)}
-            />
+            <ModalBox1 data={'专辑：' + dialogData?.album} />
+            <ModalBox1 data={'歌手：' + dialogData?.artist} />
+            <ModalBox1 data={'歌曲：' + dialogData?.title} />
+            <ModalBox1 data={'下载'} onClick={downloadClick} />
+            <ModalBox1 data={'删除'} onClick={deleteClick} />
+            <ModalBox1 data={'添加到歌单'} onClick={addSonglists} />
           </View>
         </View>
       </Modal>
@@ -102,12 +112,15 @@ const css = StyleSheet.create({
   modalBox: {
     width: '100%',
     height: '100%',
-    // backgroundColor: 'rgba(0,0,0,0.2)',
   },
-
+  modalTop: {
+    height: '50%',
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0)',
+  },
   modalFlatList: {
     backgroundColor: '#fff',
-    height: 400,
+    height: '50%',
     position: 'absolute',
     width: '100%',
     bottom: 0,
