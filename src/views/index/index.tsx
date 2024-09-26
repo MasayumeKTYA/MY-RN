@@ -160,7 +160,7 @@ const Index: React.FC<ToastProp> = ({ navigation, Toast }) => {
           activeOpacity={1}
           underlayColor="rgba(245,245,245,0.45)"
           onPress={() => navigation.navigate('setting')}>
-          <Text style={style.localFileFont}>最近</Text>
+          <Text style={style.localFileFont}>本地下载</Text>
         </TouchableHighlight> */}
         <TouchableHighlight
           style={[style.localFile]}

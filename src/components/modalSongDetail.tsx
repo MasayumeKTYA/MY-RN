@@ -1,25 +1,31 @@
 import storage from '@/storage';
-import { ListsType, MusicDataType } from '@/type';
+import { ListsType, MemoType, MusicDataType } from '@/type';
 import { useEffect, useState } from 'react';
 import { FlatList, Modal, StyleSheet, Text, View } from 'react-native';
 import ModalBox2 from './modalBox2';
 import ModalBox1 from './modalBox1';
+import { downloadFile } from 'react-native-fs';
+import { getSongUrl } from '@/api/index';
+import { useAppSelector } from '@/store';
 type MdoalSongDetailType = {
   visible1: boolean;
-  onClose: Function;
+  onClose: () => void;
+  onDelete: () => void;
   dialogData: MusicDataType | null;
+  Toast: MemoType;
 };
-type songSelectType = {
-  id: string;
-  name: string;
-};
+
 const MdoalSongDetail: React.FC<MdoalSongDetailType> = ({
   visible1,
   onClose,
+  onDelete,
   dialogData,
+  Toast,
 }) => {
+  const { showToast, hideToast } = Toast;
   const [visible2, setVisible2] = useState(false);
   const [songLists, setSongLists] = useState<ListsType[]>([]);
+  const { savePath } = useAppSelector(state => state.songState);
   //选择当前歌单
   const saveSong = async (id: string) => {
     if (dialogData === null) return;
@@ -32,19 +38,26 @@ const MdoalSongDetail: React.FC<MdoalSongDetailType> = ({
     await storage.save({ key: String(id), data: [...songs] });
     await storage.save({ key: 'lists', data: [...lists] });
   };
-  //删除
-  const deleteClick = () => {
-    console.log(dialogData);
 
-    onClose();
-  };
   //下载
-  const downloadClick = () => {
-    onClose();
+  const downloadClick = async () => {
+    //下载歌曲
+    const responseURL = await getSongUrl(dialogData!.title);
+    if (responseURL.src === undefined) return;
+    showToast('添加至下载队列');
+    setTimeout(hideToast, 1000);
+    try {
+      await downloadFile({
+        fromUrl: responseURL.src,
+        toFile: `${savePath}/${responseURL.songname}.mp3`,
+      }).promise;
+      onClose();
+    } catch (error) {}
   };
   //添加歌单
   const addSonglists = () => {
     onClose();
+    setTimeout(() => setVisible2(true), 400);
   };
   useEffect(() => {
     storage
@@ -57,7 +70,7 @@ const MdoalSongDetail: React.FC<MdoalSongDetailType> = ({
   }, []);
   return (
     <>
-      {visible1 ? (
+      {visible1 || visible2 ? (
         <View
           style={{
             width: '100%',
@@ -82,7 +95,7 @@ const MdoalSongDetail: React.FC<MdoalSongDetailType> = ({
             <ModalBox1 data={'歌手：' + dialogData?.artist} />
             <ModalBox1 data={'歌曲：' + dialogData?.title} />
             <ModalBox1 data={'下载'} onClick={downloadClick} />
-            <ModalBox1 data={'删除'} onClick={deleteClick} />
+            <ModalBox1 data={'删除'} onClick={onDelete} />
             <ModalBox1 data={'添加到歌单'} onClick={addSonglists} />
           </View>
         </View>
@@ -91,8 +104,13 @@ const MdoalSongDetail: React.FC<MdoalSongDetailType> = ({
         animationType="fade"
         transparent={true}
         visible={visible2}
-        statusBarTranslucent={true}>
+        statusBarTranslucent={true}
+        onRequestClose={() => setVisible2(false)}>
         <View style={css.modalBox}>
+          <View
+            style={css.modalTop}
+            onTouchEndCapture={() => setVisible2(false)}
+          />
           <View style={css.modalFlatList}>
             <FlatList
               data={songLists}

@@ -57,6 +57,20 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
   //弹窗
   const [visible1, setVisible1] = useState(false);
   const [dialogData, setDialogData] = useState<MusicDataType | null>(null);
+  //点击删除
+  const deleteSong = async () => {
+    try {
+      const index = lists.findIndex(item => item.title === dialogData?.title);
+      const arr = [...lists];
+      arr.splice(index, 1);
+      setLists(arr);
+      setVisible1(false);
+      showToast('删除成功');
+      setTimeout(hideToast, 1000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     setTimeout(detailInit, 350);
   }, []);
@@ -70,25 +84,24 @@ const Detail: React.FC<ToastProp> = ({ route, Toast, navigation }) => {
         dialogData={dialogData}
         visible1={visible1}
         onClose={() => setVisible1(false)}
+        onDelete={deleteSong}
+        Toast={Toast}
       />
       <FlatList
         data={lists}
-        renderItem={useCallback(
-          ({ item, index }: renderItemType) => {
-            return (
-              <SongBox
-                data={item}
-                index={index}
-                onPress={clickItem}
-                onEdit={data => {
-                  setVisible1(true);
-                  setDialogData(data);
-                }}
-              />
-            );
-          },
-          [lists],
-        )}
+        renderItem={useCallback(({ item, index }: renderItemType) => {
+          return (
+            <SongBox
+              data={item}
+              index={index}
+              onPress={clickItem}
+              onEdit={data => {
+                setVisible1(true);
+                setDialogData(data);
+              }}
+            />
+          );
+        }, [])}
         keyExtractor={keyExtractor}
         initialNumToRender={13}
         updateCellsBatchingPeriod={150}

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Pressable, FlatList } from 'react-native';
 import storage from '@/storage/index';
 import { hidenWin } from '@/store/module/winState';
-import { useAppDispatch } from '@/store/index';
+import { useAppDispatch, useAppSelector } from '@/store/index';
 import { MusicDataType, ToastProp } from '@/type/index';
 import TrackPlayer from 'react-native-track-player';
 import { setSongLists } from '@/store/module/songState';
 import { Empty, SongBox } from '@/components';
+import { readDir } from 'react-native-fs';
 import Headers from './headerComponent/index.tsx';
 import MemoAudio from '@/components/audio.tsx';
 const LocalFile: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
@@ -14,16 +15,15 @@ const LocalFile: React.FC<ToastProp> = ({ navigation, route, Toast }) => {
   const { showToast, hideToast } = Toast;
   const dispatch = useAppDispatch();
   const [MusicData, setMusicData] = useState<MusicDataType[]>([]);
-
+  const { savePath } = useAppSelector(state => state.songState);
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      storage
-        .load({
-          key: 'storagePath',
-        })
-        .then((res: MusicDataType[]) => {
-          setTimeout(() => setMusicData(res), 350);
-        });
+    const unsubscribe = navigation.addListener('focus', async () => {
+      const res: MusicDataType[] = await storage.load({
+        key: 'storagePath',
+      });
+      // setTimeout(() => setMusicData(res), 350);
+      const local: any = await readDir(savePath);
+      console.log(local);
     });
     return unsubscribe;
   }, [navigation]);
