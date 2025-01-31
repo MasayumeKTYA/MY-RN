@@ -8,7 +8,7 @@ export const counterSlice = createSlice({
     songList: [] as MusicDataType[],
     currentIndex: -1,
     isShow: true,
-    savePath: ExternalDirectoryPath + '/downLoad'
+    savePath: ExternalDirectoryPath + '/downLoad',
   },
   reducers: {
     //设置播放状态
@@ -28,12 +28,13 @@ export const counterSlice = createSlice({
     },
     //设置路径
     setDownload: (state, action) => {
-      state.savePath = action.payload
-    }
+      state.savePath = action.payload;
+    },
   },
 });
 
 // 为每个 case reducer 函数生成 Action creators
-export const { setPlay, setSongLists, changeShow, setDownload } = counterSlice.actions;
+export const { setPlay, setSongLists, changeShow, setDownload } =
+  counterSlice.actions;
 
 export default counterSlice.reducer;

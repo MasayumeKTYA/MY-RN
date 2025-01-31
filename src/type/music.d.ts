@@ -1,9 +1,7 @@
 import { AddTrack } from 'react-native-track-player';
 import { ParamListBase } from '@react-navigation/native';
-import {
-  NativeStackNavigationProp,
-} from '@react-navigation/native-stack';
-import { DrawerScreenProps } from '@react-navigation/drawer'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { DrawerScreenProps } from '@react-navigation/drawer';
 export type MusicDataType = {
   id: string; //id
   album: string; //专辑
